@@ -35,7 +35,7 @@ class AppTheme {
       onSurfaceVariant: const Color(0xffA0A0A0),
       surfaceContainer: const Color(0xff1A1A1A),
       outline: const Color(0xff3A3A3A),
-      shadow: const Color(0xff1A1A1A).withValues(alpha: 15),
+      shadow: const Color(0xff1A1A1A).withValues(alpha: 0.15),
     ),
     useMaterial3: true,
   );
