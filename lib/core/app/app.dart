@@ -10,8 +10,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // routerConfig: AppRouter.router,
-      debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       locale: const Locale('en'),
