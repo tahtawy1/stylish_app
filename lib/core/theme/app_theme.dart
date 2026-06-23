@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish_app/core/theme/app_text_styles.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
@@ -18,6 +19,7 @@ class AppTheme {
       outline: const Color(0xffCCCCCC),
       shadow: const Color(0xffFFFFFF).withValues(alpha: 15),
     ),
+    textTheme: AppTextStyles.textTheme,
     useMaterial3: true,
   );
   static ThemeData darkTheme = ThemeData(
@@ -37,6 +39,7 @@ class AppTheme {
       outline: const Color(0xff3A3A3A),
       shadow: const Color(0xff1A1A1A).withValues(alpha: 0.15),
     ),
+    textTheme: AppTextStyles.textTheme,
     useMaterial3: true,
   );
 }
