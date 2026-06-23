@@ -1,45 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/theme/app_text_styles.dart';
+import 'package:stylish_app/core/theme/app_colors.dart';
 
 class AppTheme {
-  static ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
-    colorScheme: ColorScheme(
-      primary: const Color(0xff1A1A1A),
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.light,
-      onPrimary: Colors.white,
-      secondary: const Color(0xff979797),
-      onSecondary: Colors.white,
-      error: const Color(0xFFF44336),
-      onError: const Color(0xFFFFFFFF),
-      surface: const Color(0xffFFFFFF),
-      onSurface: const Color(0xff1A1A1A),
-      onSurfaceVariant: const Color(0xff808080),
-      surfaceContainer: const Color(0xff1A1A1A),
-      outline: const Color(0xffCCCCCC),
-      shadow: const Color(0xffFFFFFF).withValues(alpha: 15),
-    ),
-    textTheme: AppTextStyles.textTheme,
-    useMaterial3: true,
-  );
-  static ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    colorScheme: ColorScheme(
-      primary: const Color(0xffE6E6E6),
+      colorScheme: ColorScheme(
+        brightness: Brightness.light,
+
+        // Primary
+        primary: AppColors.grey1,
+        onPrimary: AppColors.white,
+
+        // Secondary
+        secondary: AppColors.grey6,
+        onSecondary: AppColors.white,
+
+        // Error
+        error: const Color(0xFFF44336),
+        onError: AppColors.white,
+
+        // Surface
+        surface: AppColors.white,
+        onSurface: AppColors.grey1,
+        onSurfaceVariant: AppColors.grey5,
+        surfaceContainer: AppColors.grey1,
+
+        // Utility
+        outline: AppColors.grey9,
+        shadow: AppColors.white.withValues(alpha: 15),
+      ),
+    );
+  }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.dark,
-      onPrimary: const Color(0xff1A1A1A),
-      secondary: const Color(0xff979797),
-      onSecondary: const Color(0xffE6E6E6),
-      error: const Color(0xFFF44336),
-      onError: const Color(0xffE6E6E6),
-      surface: const Color(0xff1A1A1A),
-      onSurface: const Color(0xffE6E6E6),
-      onSurfaceVariant: const Color(0xffA0A0A0),
-      surfaceContainer: const Color(0xff1A1A1A),
-      outline: const Color(0xff3A3A3A),
-      shadow: const Color(0xff1A1A1A).withValues(alpha: 0.15),
-    ),
-    textTheme: AppTextStyles.textTheme,
-    useMaterial3: true,
-  );
+      colorScheme: ColorScheme(
+        brightness: Brightness.dark,
+
+        // Primary
+        primary: AppColors.white,
+        onPrimary: AppColors.grey1,
+
+        // Secondary
+        secondary: AppColors.grey5,
+        onSecondary: AppColors.grey1,
+
+        // Error
+        error: const Color(0xFFF44336),
+        onError: AppColors.white,
+
+        // Surface
+        surface: AppColors.grey1,
+        onSurface: AppColors.white,
+        onSurfaceVariant: AppColors.grey8,
+        surfaceContainer: AppColors.grey2,
+
+        // Utility
+        outline: AppColors.grey4,
+        shadow: AppColors.grey1.withValues(alpha: 15),
+      ),
+    );
+  }
 }
