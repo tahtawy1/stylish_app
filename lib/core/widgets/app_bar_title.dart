@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/extensions/text_theme_ext.dart';
+import 'package:stylish_app/core/extensions/build_context.dart';
 
 class AppBarTitle extends StatelessWidget {
   const AppBarTitle({super.key, required this.title});

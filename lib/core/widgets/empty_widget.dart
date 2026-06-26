@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/extensions/color_scheme_ext.dart';
+import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
 import 'package:stylish_app/core/theme/app_text_styles.dart';
 

@@ -29,7 +29,7 @@ class AppTheme {
 
         // Utility
         outline: AppColors.grey9,
-        shadow: AppColors.white.withValues(alpha: 15),
+        shadow: AppColors.white.withValues(alpha: 75),
       ),
     );
   }
@@ -57,7 +57,7 @@ class AppTheme {
         surface: AppColors.grey1,
         onSurface: AppColors.white,
         onSurfaceVariant: AppColors.grey8,
-        surfaceContainer: AppColors.grey2,
+        surfaceContainer: AppColors.white,
 
         // Utility
         outline: AppColors.grey4,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/extensions/color_scheme_ext.dart';
-import 'package:stylish_app/core/extensions/text_theme_ext.dart';
+import 'package:stylish_app/core/extensions/build_context.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({
