@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:stylish_app/core/localization/generated/l10n.dart';
+import 'package:stylish_app/core/localization/l10n/app_localizations.dart';
 import 'package:stylish_app/core/theme/app_theme.dart';
 
 class App extends StatelessWidget {
@@ -16,12 +16,12 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       locale: const Locale('en'),
       localizationsDelegates: const [
-        S.delegate,
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: S.delegate.supportedLocales,
+      supportedLocales: const [Locale('en')],
     );
   }
 }

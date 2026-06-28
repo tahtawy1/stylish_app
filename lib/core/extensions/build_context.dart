@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish_app/core/localization/l10n/app_localizations.dart';
 
 extension ColorSchemeExt on BuildContext {
   ColorScheme get colors => Theme.of(this).colorScheme;
@@ -10,4 +11,8 @@ extension TextThemeExt on BuildContext {
 
 extension ThemeExt on BuildContext {
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+}
+
+extension LocalizationsExt on BuildContext {
+  AppLocalizations get l10n => AppLocalizations.of(this)!;
 }
