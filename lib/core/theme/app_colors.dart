@@ -17,4 +17,6 @@ class AppColors {
   // Accent colors
   static const Color green = Color(0xFF0C9409);
   static const Color red = Color(0xFFED1010);
+  // Custom colors
+  static const Color shadow = Colors.black38;
 }

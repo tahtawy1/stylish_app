@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
+import 'package:stylish_app/core/theme/app_text_styles.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
+      fontFamily: 'Inter',
+      textTheme: AppTextStyles.textTheme,
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme(
@@ -36,6 +39,8 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      fontFamily: 'Inter',
+      textTheme: AppTextStyles.textTheme,
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: ColorScheme(

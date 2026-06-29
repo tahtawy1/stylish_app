@@ -93,6 +93,36 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+
+  /// No description provided for @appName.
+  ///
+  /// In en, this message translates to:
+  /// **'Stylish'**
+  String get appName;
+
+  /// No description provided for @onBoardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Define yourself in your unique way.'**
+  String get onBoardingTitle;
+
+  /// No description provided for @onBoardingButtonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onBoardingButtonTitle;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred, please try again.'**
+  String get unknownError;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get unexpectedError;
 }
 
 class _AppLocalizationsDelegate
