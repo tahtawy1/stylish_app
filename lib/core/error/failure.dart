@@ -12,3 +12,19 @@ abstract class Failure extends Equatable {
 class CacheFailure extends Failure {
   const CacheFailure(super.message);
 }
+
+class ServerFailure extends Failure {
+  const ServerFailure(super.message);
+}
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}
+
+class AuthFailure extends Failure {
+  final String code;
+  const AuthFailure(this.code, super.message);
+
+  @override
+  List<Object> get props => [code, message];
+}

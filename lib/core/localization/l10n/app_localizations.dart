@@ -123,6 +123,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An unexpected error occurred.'**
   String get unexpectedError;
+
+  /// No description provided for @cacheError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load cached data.'**
+  String get cacheError;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection.'**
+  String get networkError;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error, please try again later.'**
+  String get serverError;
+
+  /// No description provided for @authError.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed, please try again.'**
+  String get authError;
+
+  /// No description provided for @userNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No user found for that email.'**
+  String get userNotFound;
+
+  /// No description provided for @wrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong password provided for that user.'**
+  String get wrongPassword;
+
+  /// No description provided for @emailAlreadyInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'The account already exists for that email.'**
+  String get emailAlreadyInUse;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address is badly formatted.'**
+  String get invalidEmail;
 }
 
 class _AppLocalizationsDelegate

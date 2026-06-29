@@ -22,4 +22,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unexpectedError => 'An unexpected error occurred.';
+
+  @override
+  String get cacheError => 'Failed to load cached data.';
+
+  @override
+  String get networkError => 'Please check your internet connection.';
+
+  @override
+  String get serverError => 'Server error, please try again later.';
+
+  @override
+  String get authError => 'Authentication failed, please try again.';
+
+  @override
+  String get userNotFound => 'No user found for that email.';
+
+  @override
+  String get wrongPassword => 'Wrong password provided for that user.';
+
+  @override
+  String get emailAlreadyInUse => 'The account already exists for that email.';
+
+  @override
+  String get invalidEmail => 'The email address is badly formatted.';
 }

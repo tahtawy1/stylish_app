@@ -9,7 +9,7 @@ class OnboardingLocalDataSource {
     try {
       return prefs.getBool('is_first_open') ?? false;
     } catch (e) {
-      throw CacheException();
+      throw CacheException(message: e.toString());
     }
   }
 
@@ -17,7 +17,7 @@ class OnboardingLocalDataSource {
     try {
       await prefs.setBool('is_first_open', true);
     } catch (e) {
-      throw CacheException();
+      throw CacheException(message: e.toString());
     }
   }
 }

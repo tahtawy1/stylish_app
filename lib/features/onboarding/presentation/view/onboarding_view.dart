@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
-import 'package:stylish_app/core/error/error_handler.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
+import 'package:stylish_app/core/extensions/failure_extension.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
 import 'package:stylish_app/features/onboarding/view_model/onboarding_cubit/onboarding_cubit.dart';
@@ -20,14 +19,10 @@ class OnboardingView extends StatelessWidget {
       child: BlocListener<OnboardingCubit, OnboardingState>(
         listener: (context, state) {
           if (state is OnboardingSeen || state is NavigateToAuth) {
-            // Navigate to Auth screen when done
-            // context.go('/auth');
             log('Navigate to Auth');
           } else if (state is OnboardingError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(ErrorHandler.getMessage(context, state.failure)),
-              ),
+              SnackBar(content: Text(state.failure.toMessage(context))),
             );
           }
         },

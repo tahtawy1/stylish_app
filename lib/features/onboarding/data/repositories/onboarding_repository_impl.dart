@@ -12,10 +12,10 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
   Future<Either<Failure, bool>> isOnboardingSeen() async {
     try {
       return Right(localDataSource.isOnboardingSeen());
-    } on CacheException {
-      return const Left(CacheFailure('unknown error'));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
     } catch (e) {
-      return const Left(CacheFailure('unknown error'));
+      return Left(CacheFailure(e.toString()));
     }
   }
 
@@ -24,10 +24,10 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
     try {
       await localDataSource.saveOnboardingSeen();
       return const Right(null);
-    } on CacheException {
-      return const Left(CacheFailure('unknown error'));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
     } catch (e) {
-      return const Left(CacheFailure('unknown error'));
+      return Left(CacheFailure(e.toString()));
     }
   }
 }
