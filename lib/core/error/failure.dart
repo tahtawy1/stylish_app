@@ -3,27 +3,27 @@ import 'package:equatable/equatable.dart';
 abstract class Failure extends Equatable {
   final String message;
 
-  const Failure(this.message);
+  const Failure({required this.message});
 
   @override
   List<Object> get props => [message];
 }
 
 class CacheFailure extends Failure {
-  const CacheFailure(super.message);
+  const CacheFailure({required super.message});
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure(super.message);
+  const ServerFailure({required super.message});
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure(super.message);
+  const NetworkFailure({required super.message});
 }
 
 class AuthFailure extends Failure {
   final String code;
-  const AuthFailure(this.code, super.message);
+  const AuthFailure({required this.code, required super.message});
 
   @override
   List<Object> get props => [code, message];

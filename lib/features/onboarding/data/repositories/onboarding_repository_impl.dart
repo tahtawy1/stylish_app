@@ -13,9 +13,9 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
     try {
       return Right(localDataSource.isOnboardingSeen());
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(e.toString()));
+      return Left(CacheFailure(message: e.toString()));
     }
   }
 
@@ -25,9 +25,9 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
       await localDataSource.saveOnboardingSeen();
       return const Right(null);
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return Left(CacheFailure(message: e.message));
     } catch (e) {
-      return Left(CacheFailure(e.toString()));
+      return Left(CacheFailure(message: e.toString()));
     }
   }
 }
