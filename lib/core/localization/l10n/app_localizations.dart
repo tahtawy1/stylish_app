@@ -171,6 +171,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The email address is badly formatted.'**
   String get invalidEmail;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to your account'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s great to see you again.'**
+  String get loginSubtitle;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginButton;
+
+  /// No description provided for @loginWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Google'**
+  String get loginWithGoogle;
+
+  /// No description provided for @loginWithFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Facebook'**
+  String get loginWithFacebook;
+
+  /// No description provided for @loginForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get loginForgotPassword;
+
+  /// No description provided for @loginForgotPasswordAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get loginForgotPasswordAction;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get loginNoAccount;
+
+  /// No description provided for @loginJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get loginJoin;
+
+  /// No description provided for @registerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get registerTitle;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s create your account.'**
+  String get registerSubtitle;
+
+  /// No description provided for @registerButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an Account'**
+  String get registerButton;
+
+  /// No description provided for @registerWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up with Google'**
+  String get registerWithGoogle;
+
+  /// No description provided for @registerWithFacebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up with Facebook'**
+  String get registerWithFacebook;
+
+  /// No description provided for @registerHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get registerHaveAccount;
+
+  /// No description provided for @registerLogIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get registerLogIn;
+
+  /// No description provided for @registerTermsPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By signing up you agree to our '**
+  String get registerTermsPrefix;
+
+  /// No description provided for @registerTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms'**
+  String get registerTerms;
+
+  /// No description provided for @registerPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get registerPrivacyPolicy;
+
+  /// No description provided for @registerAnd.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get registerAnd;
+
+  /// No description provided for @registerCookieUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Cookie Use'**
+  String get registerCookieUse;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @forgotPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email for the verification process. We will send 4 digits code to your email.'**
+  String get forgotPasswordSubtitle;
+
+  /// No description provided for @forgotPasswordButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get forgotPasswordButton;
+
+  /// No description provided for @fieldFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fieldFullName;
+
+  /// No description provided for @fieldEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get fieldEmail;
+
+  /// No description provided for @fieldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get fieldPassword;
+
+  /// No description provided for @hintFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get hintFullName;
+
+  /// No description provided for @hintEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address'**
+  String get hintEmail;
+
+  /// No description provided for @hintPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get hintPassword;
+
+  /// No description provided for @orDivider.
+  ///
+  /// In en, this message translates to:
+  /// **'Or'**
+  String get orDivider;
 }
 
 class _AppLocalizationsDelegate

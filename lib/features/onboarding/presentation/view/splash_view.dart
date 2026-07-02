@@ -67,7 +67,7 @@ class _SplashViewState extends State<SplashView>
         if (state is SplashNavigateToOnboarding) {
           context.go('/onboarding');
         } else if (state is SplashNavigateToAuth) {
-          // context.go('/auth');
+          context.go('/login');
           log("Navigate to Auth View");
         } else if (state is SplashNavigateToHome) {
           // context.go('/home');

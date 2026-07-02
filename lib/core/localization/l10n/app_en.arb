@@ -11,5 +11,41 @@
     "userNotFound": "No user found for that email.",
     "wrongPassword": "Wrong password provided for that user.",
     "emailAlreadyInUse": "The account already exists for that email.",
-    "invalidEmail": "The email address is badly formatted."
+    "invalidEmail": "The email address is badly formatted.",
+
+    "loginTitle": "Login to your account",
+    "loginSubtitle": "It's great to see you again.",
+    "loginButton": "Login",
+    "loginWithGoogle": "Login with Google",
+    "loginWithFacebook": "Login with Facebook",
+    "loginForgotPassword": "Forgot your password?",
+    "loginForgotPasswordAction": "Reset your password",
+    "loginNoAccount": "Don't have an account?",
+    "loginJoin": "Join",
+
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Let's create your account.",
+    "registerButton": "Create an Account",
+    "registerWithGoogle": "Sign Up with Google",
+    "registerWithFacebook": "Sign Up with Facebook",
+    "registerHaveAccount": "Already have an account?",
+    "registerLogIn": "Log In",
+    "registerTermsPrefix": "By signing up you agree to our ",
+    "registerTerms": "Terms",
+    "registerPrivacyPolicy": "Privacy Policy",
+    "registerAnd": " and ",
+    "registerCookieUse": "Cookie Use",
+
+    "forgotPasswordTitle": "Forgot password",
+    "forgotPasswordSubtitle": "Enter your email for the verification process. We will send 4 digits code to your email.",
+    "forgotPasswordButton": "Send Code",
+
+    "fieldFullName": "Full Name",
+    "fieldEmail": "Email",
+    "fieldPassword": "Password",
+    "hintFullName": "Enter your full name",
+    "hintEmail": "Enter your email address",
+    "hintPassword": "Enter your password",
+
+    "orDivider": "Or"
 }
