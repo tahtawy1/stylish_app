@@ -8,4 +8,6 @@ abstract class AuthDataSource {
   Future<void> forgotPassword({required String email});
   Future<void> sendEmailVerification();
   bool emailVerified();
+  Future<void> signWithGoogle();
+  Future<void> signWithFacebook();
 }

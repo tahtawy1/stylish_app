@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stylish_app/core/error/exceptions.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:stylish_app/features/auth/data/models/user_model.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
   final FirebaseAuth auth;
+  final GoogleSignIn googleSignIn;
 
-  AuthDataSourceImpl({required this.auth});
+  AuthDataSourceImpl({required this.auth, required this.googleSignIn});
   @override
   Future<void> register({
     required String name,
@@ -61,6 +65,28 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       return auth.currentUser?.emailVerified ?? true;
     } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> signWithFacebook() {
+    // TODO: implement signWithFacebook
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> signWithGoogle() async {
+    try {
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      log(e.toString());
       throw ServerException(message: e.toString());
     }
   }

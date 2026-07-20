@@ -52,6 +52,8 @@ class _RegisterViewState extends State<RegisterView> {
               );
           }
           context.pop();
+        } else if (state is RegisterWithGoogleSuccess) {
+          // TODO: navigate to home
         }
       },
       child: Scaffold(
@@ -121,7 +123,7 @@ class _RegisterViewState extends State<RegisterView> {
                   googleLabel: l10n.registerWithGoogle,
                   facebookLabel: l10n.registerWithFacebook,
                   onGooglePressed: () {
-                    // TODO: Google sign-up
+                    context.read<RegisterCubit>().registerWithGoogle();
                   },
                   onFacebookPressed: () {
                     // TODO: Facebook sign-up

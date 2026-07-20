@@ -44,9 +44,7 @@ class _LoginViewState extends State<LoginView> {
         } else if (state is VerifyEmail) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(l10n.verifyEmailMessage)),
-            );
+            ..showSnackBar(SnackBar(content: Text(l10n.verifyEmailMessage)));
         } else if (state is LoginSuccess) {
           // TODO: navigate to home
         }
@@ -105,7 +103,7 @@ class _LoginViewState extends State<LoginView> {
                   googleLabel: l10n.loginWithGoogle,
                   facebookLabel: l10n.loginWithFacebook,
                   onGooglePressed: () {
-                    // TODO: Google sign-in
+                    context.read<LoginCubit>().loginWithGoogle();
                   },
                   onFacebookPressed: () {
                     // TODO: Facebook sign-in

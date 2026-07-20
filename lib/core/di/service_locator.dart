@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
@@ -10,6 +11,7 @@ import 'package:stylish_app/features/auth/domain/use_cases/forgot_password_use_c
 import 'package:stylish_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/register_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/send_email_verification_use_case.dart';
+import 'package:stylish_app/features/auth/domain/use_cases/sign_with_google_use_case.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
@@ -27,6 +29,7 @@ Future<void> setupLocators() async {
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => prefs);
 
+  getIt.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   // Onboarding
   getIt.registerLazySingleton<OnboardingLocalDataSource>(
     () => OnboardingLocalDataSource(prefs: getIt()),
@@ -46,7 +49,10 @@ Future<void> setupLocators() async {
   // Auth
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   getIt.registerLazySingleton<AuthDataSource>(
-    () => AuthDataSourceImpl(auth: getIt<FirebaseAuth>()),
+    () => AuthDataSourceImpl(
+      auth: getIt<FirebaseAuth>(),
+      googleSignIn: getIt<GoogleSignIn>(),
+    ),
   );
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(authDataSource: getIt<AuthDataSource>()),
@@ -66,16 +72,21 @@ Future<void> setupLocators() async {
   getIt.registerLazySingleton<SendEmailVerificationUseCase>(
     () => SendEmailVerificationUseCase(repository: getIt<AuthRepository>()),
   );
+  getIt.registerLazySingleton<SignWithGoogleUseCase>(
+    () => SignWithGoogleUseCase(authRepository: getIt<AuthRepository>()),
+  );
   getIt.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: getIt<LoginUseCase>(),
       emailVerifiedUseCase: getIt<EmailVerifiedUseCase>(),
+      signWithGoogleUseCase: getIt<SignWithGoogleUseCase>(),
     ),
   );
   getIt.registerFactory<RegisterCubit>(
     () => RegisterCubit(
       registerUseCase: getIt<RegisterUseCase>(),
       sendEmailVerificationUseCase: getIt<SendEmailVerificationUseCase>(),
+      signWithGoogleUseCase: getIt<SignWithGoogleUseCase>(),
     ),
   );
   getIt.registerFactory<ForgotPasswordCubit>(

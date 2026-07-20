@@ -19,3 +19,5 @@ final class RegisterError extends RegisterState {
   final String message;
   const RegisterError({required this.message});
 }
+
+final class RegisterWithGoogleSuccess extends RegisterState {}
