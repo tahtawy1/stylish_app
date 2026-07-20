@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
+import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
+import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
+import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/login_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/register_view.dart';
@@ -23,14 +26,26 @@ class AppRouter {
         path: '/onboarding',
         builder: (context, state) => const OnboardingView(),
       ),
-      GoRoute(path: '/login', builder: (context, state) => const LoginView()),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => BlocProvider<LoginCubit>(
+          create: (context) => getIt<LoginCubit>(),
+          child: const LoginView(),
+        ),
+      ),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const RegisterView(),
+        builder: (context, state) => BlocProvider<RegisterCubit>(
+          create: (context) => getIt<RegisterCubit>(),
+          child: const RegisterView(),
+        ),
       ),
       GoRoute(
         path: '/forget_password',
-        builder: (context, state) => const ForgotPasswordView(),
+        builder: (context, state) => BlocProvider<ForgotPasswordCubit>(
+          create: (context) => getIt<ForgotPasswordCubit>(),
+          child: const ForgotPasswordView(),
+        ),
       ),
     ],
   );

@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stylish_app/features/auth/domain/usecases/forgot_password_use_case.dart';
+import 'package:stylish_app/features/auth/domain/use_cases/forgot_password_use_case.dart';
 
 part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
-  ForgotPasswordCubit(this.forgotPasswordUseCase)
+  ForgotPasswordCubit({required this.forgotPasswordUseCase})
     : super(ForgotPasswordInitial());
 
   final ForgotPasswordUseCase forgotPasswordUseCase;

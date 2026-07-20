@@ -12,7 +12,6 @@
     "wrongPassword": "Wrong password provided for that user.",
     "emailAlreadyInUse": "The account already exists for that email.",
     "invalidEmail": "The email address is badly formatted.",
-
     "loginTitle": "Login to your account",
     "loginSubtitle": "It's great to see you again.",
     "loginButton": "Login",
@@ -22,7 +21,6 @@
     "loginForgotPasswordAction": "Reset your password",
     "loginNoAccount": "Don't have an account?",
     "loginJoin": "Join",
-
     "registerTitle": "Create an account",
     "registerSubtitle": "Let's create your account.",
     "registerButton": "Create an Account",
@@ -35,17 +33,22 @@
     "registerPrivacyPolicy": "Privacy Policy",
     "registerAnd": " and ",
     "registerCookieUse": "Cookie Use",
-
     "forgotPasswordTitle": "Forgot password",
     "forgotPasswordSubtitle": "Enter your email for the verification process. We will send 4 digits code to your email.",
     "forgotPasswordButton": "Send Code",
-
     "fieldFullName": "Full Name",
     "fieldEmail": "Email",
     "fieldPassword": "Password",
     "hintFullName": "Enter your full name",
     "hintEmail": "Enter your email address",
     "hintPassword": "Enter your password",
-
-    "orDivider": "Or"
+    "orDivider": "Or",
+    "fieldRequiredValidation": "This field is required.",
+    "nameTooShortValidation": "Name must be at least 2 characters.",
+    "invalidEmailValidation": "Please enter a valid email address.",
+    "passwordTooShortValidation": "Password must be at least 8 characters.",
+    "passwordsDoNotMatchValidation": "Passwords do not match.",
+    "verifyEmailMessage": "Please verify your email address before logging in.",
+    "registerSuccessMessage": "Account created! Please check your email to verify your account.",
+    "forgotPasswordSuccess": "Password reset email sent. Please check your inbox."
 }

@@ -140,4 +140,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orDivider => 'Or';
+
+  @override
+  String get fieldRequiredValidation => 'This field is required.';
+
+  @override
+  String get nameTooShortValidation => 'Name must be at least 2 characters.';
+
+  @override
+  String get invalidEmailValidation => 'Please enter a valid email address.';
+
+  @override
+  String get passwordTooShortValidation =>
+      'Password must be at least 8 characters.';
+
+  @override
+  String get passwordsDoNotMatchValidation => 'Passwords do not match.';
+
+  @override
+  String get verifyEmailMessage =>
+      'Please verify your email address before logging in.';
+
+  @override
+  String get registerSuccessMessage =>
+      'Account created! Please check your email to verify your account.';
+
+  @override
+  String get forgotPasswordSuccess =>
+      'Password reset email sent. Please check your inbox.';
 }

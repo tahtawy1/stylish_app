@@ -17,3 +17,7 @@ final class LoginError extends LoginState {
   final String message;
   const LoginError({required this.message});
 }
+
+final class VerifyEmail extends LoginState {
+  const VerifyEmail();
+}

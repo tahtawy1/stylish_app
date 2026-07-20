@@ -53,4 +53,24 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Either<Failure, bool> emailVerified() {
+    try {
+      final result = authDataSource.emailVerified();
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendEmailVerification() async {
+    try {
+      await authDataSource.sendEmailVerification();
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
 }

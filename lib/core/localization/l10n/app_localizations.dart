@@ -357,6 +357,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Or'**
   String get orDivider;
+
+  /// No description provided for @fieldRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required.'**
+  String get fieldRequiredValidation;
+
+  /// No description provided for @nameTooShortValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 2 characters.'**
+  String get nameTooShortValidation;
+
+  /// No description provided for @invalidEmailValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address.'**
+  String get invalidEmailValidation;
+
+  /// No description provided for @passwordTooShortValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters.'**
+  String get passwordTooShortValidation;
+
+  /// No description provided for @passwordsDoNotMatchValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get passwordsDoNotMatchValidation;
+
+  /// No description provided for @verifyEmailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email address before logging in.'**
+  String get verifyEmailMessage;
+
+  /// No description provided for @registerSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created! Please check your email to verify your account.'**
+  String get registerSuccessMessage;
+
+  /// No description provided for @forgotPasswordSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent. Please check your inbox.'**
+  String get forgotPasswordSuccess;
 }
 
 class _AppLocalizationsDelegate

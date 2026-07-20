@@ -19,4 +19,6 @@ class AppColors {
   static const Color red = Color(0xFFED1010);
   // Custom colors
   static const Color shadow = Colors.black38;
+
+  static const Color bgIndicatorColor = Color(0xFFBBBBBB);
 }

@@ -13,4 +13,6 @@ abstract class AuthRepository {
     required String password,
   });
   Future<Either<Failure, void>> forgotPassword({required String email});
+  Future<Either<Failure, void>> sendEmailVerification();
+  Either<Failure, bool> emailVerified();
 }

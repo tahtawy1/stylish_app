@@ -5,7 +5,7 @@ import 'package:stylish_app/features/auth/domain/repositories/auth_repository.da
 class ForgotPasswordUseCase {
   final AuthRepository repository;
   ForgotPasswordUseCase({required this.repository});
-  Future<Either<Failure, void>> call({required String email}) async {
-    return await repository.forgotPassword(email: email);
+  Future<Either<Failure, void>> call({required String email}) {
+    return repository.forgotPassword(email: email);
   }
 }

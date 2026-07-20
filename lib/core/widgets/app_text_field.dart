@@ -10,7 +10,7 @@ class AppTextField extends StatefulWidget {
     required this.keyboardType,
     required this.validator,
     required this.state,
-    this.passwordField,
+    this.passwordField = false,
     required this.autovalidateMode,
   });
 
@@ -21,7 +21,7 @@ class AppTextField extends StatefulWidget {
   final String hint;
 
   final FieldState state;
-  final bool? passwordField;
+  final bool passwordField;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -36,7 +36,7 @@ class _AppTextFieldState extends State<AppTextField> {
       validator: widget.validator,
       autovalidateMode: widget.autovalidateMode,
       keyboardType: widget.keyboardType,
-      obscureText: !passwordVisible,
+      obscureText: widget.passwordField ? !passwordVisible : false,
       decoration: InputDecoration(
         hintText: widget.hint,
         hintStyle: context.textStyle.bodyLarge?.copyWith(

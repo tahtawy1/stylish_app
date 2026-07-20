@@ -46,4 +46,22 @@ class AuthDataSourceImpl implements AuthDataSource {
       throw ServerException(message: e.toString());
     }
   }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    try {
+      await auth.currentUser?.sendEmailVerification();
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  bool emailVerified() {
+    try {
+      return auth.currentUser?.emailVerified ?? true;
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
 }
