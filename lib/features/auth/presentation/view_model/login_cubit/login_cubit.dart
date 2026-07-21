@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/email_verified_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/sign_with_google_use_case.dart';
