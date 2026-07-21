@@ -42,7 +42,6 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   Future<void> registerWithGoogle() async {
-    emit(RegisterLoading());
     final result = await signWithGoogleUseCase();
     result.fold((failure) => emit(RegisterError(message: failure.message)), (
       response,
