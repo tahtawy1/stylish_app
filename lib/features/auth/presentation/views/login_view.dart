@@ -46,7 +46,7 @@ class _LoginViewState extends State<LoginView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(l10n.verifyEmailMessage)));
         } else if (state is LoginSuccess) {
-          // TODO: navigate to home
+          context.go('/home');
         }
       },
       child: Scaffold(

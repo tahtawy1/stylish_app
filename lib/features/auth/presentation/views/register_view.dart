@@ -53,7 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
           }
           context.pop();
         } else if (state is RegisterWithGoogleSuccess) {
-          // TODO: navigate to home
+          context.go('/home');
         }
       },
       child: Scaffold(
