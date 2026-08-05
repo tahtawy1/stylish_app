@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/di/service_locator.dart';
 import 'package:stylish_app/firebase_options.dart';
 
 class AppInitializer {

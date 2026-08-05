@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,12 +66,9 @@ class _SplashViewState extends State<SplashView>
           context.go('/onboarding');
         } else if (state is SplashNavigateToAuth) {
           context.go('/login');
-          log("Navigate to Auth View");
         } else if (state is SplashNavigateToHome) {
           // context.go('/home');
           context.go('/layout');
-
-          log("Navigate to Home View");
         }
       },
       child: Scaffold(

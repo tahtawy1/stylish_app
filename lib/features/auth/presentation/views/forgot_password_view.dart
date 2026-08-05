@@ -38,9 +38,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         } else if (state is ForgotPasswordSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(l10n.forgotPasswordSuccess)),
-            );
+            ..showSnackBar(SnackBar(content: Text(l10n.forgotPasswordSuccess)));
           context.pop();
         }
       },
