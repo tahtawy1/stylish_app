@@ -13,13 +13,13 @@ class VariantModel extends VariantEntity {
 
   factory VariantModel.fromJson(Map<String, dynamic> json) {
     return VariantModel(
-      id: json['id'],
+      id: json['id'] ?? '',
       color: json['color'],
       size: json['size'],
-      price: json['price'],
-      quantity: json['quantity'],
-      isAvailable: json['isAvailable'],
-      images: json['images'],
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      quantity: (json['quantity'] as num?)?.toInt() ?? 0,
+      isAvailable: json['isAvailable'] ?? true,
+      images: (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
     );
   }
 

@@ -4,9 +4,22 @@ import 'package:stylish_app/features/home/presentation/widgets/greeting_section.
 import 'package:stylish_app/features/home/presentation/widgets/products_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/search_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/tags_section.dart';
+import 'package:stylish_app/features/product/dummy_products_seeding.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    seedProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +30,13 @@ class HomeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GreetingSection(
-                userName: 'Albert Stevano',
-              ),
+              GreetingSection(userName: 'Albert Stevano'),
               SizedBox(height: 20),
               SearchSection(),
               SizedBox(height: 20),
               TagsSection(),
               SizedBox(height: 24),
-              ProductsSection(
-                products: HomeDummyData.products,
-              ),
+              ProductsSection(products: HomeDummyData.products),
             ],
           ),
         ),
