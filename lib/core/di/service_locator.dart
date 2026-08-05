@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get_it/get_it.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source_impl.dart';
 import 'package:stylish_app/features/auth/data/repositories/auth_repository_impl.dart';
@@ -48,10 +49,14 @@ Future<void> setupLocators() async {
 
   // Auth
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+  if (!getIt.isRegistered<FirebaseFirestore>()) {
+    getIt.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+  }
   getIt.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
       auth: getIt<FirebaseAuth>(),
       googleSignIn: getIt<GoogleSignIn>(),
+      firestore: getIt<FirebaseFirestore>(),
     ),
   );
   getIt.registerLazySingleton<AuthRepository>(

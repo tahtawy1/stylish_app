@@ -168,4 +168,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get forgotPasswordSuccess =>
       'Password reset email sent. Please check your inbox.';
+
+  @override
+  String get searchHintText => 'Search clothes . . .';
+
+  @override
+  String get morningGreeting => 'Good morning';
+
+  @override
+  String get afternoonGreeting => 'Good afternoon';
+
+  @override
+  String get eveningGreeting => 'Good evening';
 }

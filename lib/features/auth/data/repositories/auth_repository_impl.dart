@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:stylish_app/core/error/exceptions.dart';
 import 'package:stylish_app/core/error/failure.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
+import 'package:stylish_app/features/auth/data/models/user_model.dart';
 import 'package:stylish_app/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -22,6 +23,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return right(null);
     } on AuthException catch (e) {
       return left(AuthFailure(code: e.code, message: e.message));
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveUser(UserModel user) async {
+    try {
+      await authDataSource.saveUser(user);
+      return right(null);
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
     }

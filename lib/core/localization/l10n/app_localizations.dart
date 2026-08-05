@@ -405,6 +405,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password reset email sent. Please check your inbox.'**
   String get forgotPasswordSuccess;
+
+  /// No description provided for @searchHintText.
+  ///
+  /// In en, this message translates to:
+  /// **'Search clothes . . .'**
+  String get searchHintText;
+
+  /// No description provided for @morningGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get morningGreeting;
+
+  /// No description provided for @afternoonGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get afternoonGreeting;
+
+  /// No description provided for @eveningGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get eveningGreeting;
 }
 
 class _AppLocalizationsDelegate

@@ -50,5 +50,9 @@
     "passwordsDoNotMatchValidation": "Passwords do not match.",
     "verifyEmailMessage": "Please verify your email address before logging in.",
     "registerSuccessMessage": "Account created! Please check your email to verify your account.",
-    "forgotPasswordSuccess": "Password reset email sent. Please check your inbox."
+    "forgotPasswordSuccess": "Password reset email sent. Please check your inbox.",
+    "searchHintText": "Search clothes . . .",
+    "morningGreeting": "Good morning",
+    "afternoonGreeting": "Good afternoon",
+    "eveningGreeting": "Good evening"
 }
