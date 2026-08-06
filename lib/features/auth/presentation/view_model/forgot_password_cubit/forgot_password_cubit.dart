@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/forgot_password_use_case.dart';
 

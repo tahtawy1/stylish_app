@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/register_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/send_email_verification_use_case.dart';

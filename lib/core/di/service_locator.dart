@@ -16,6 +16,12 @@ import 'package:stylish_app/features/auth/domain/use_cases/sign_with_google_use_
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
+import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
+import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
+import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
+import 'package:stylish_app/features/hero/domain/repositories/hero_repository.dart';
+import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
+import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 
 import 'package:stylish_app/features/onboarding/data/data_sources/onboarding_local_data_source.dart';
 import 'package:stylish_app/features/onboarding/data/repositories/onboarding_repository_impl.dart';
@@ -98,5 +104,18 @@ Future<void> setupLocators() async {
     () => ForgotPasswordCubit(
       forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
     ),
+  );
+
+  getIt.registerLazySingleton<HeroRemoteDataSource>(
+    () => HeroRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<HeroRepository>(
+    () => HeroRepositoryImpl(remoteDataSource: getIt<HeroRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetHeroSectionsUseCase>(
+    () => GetHeroSectionsUseCase(repository: getIt<HeroRepository>()),
+  );
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(getIt<GetHeroSectionsUseCase>()),
   );
 }

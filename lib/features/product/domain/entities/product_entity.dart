@@ -1,3 +1,4 @@
+import 'package:stylish_app/features/product/domain/entities/collection_entity.dart';
 import 'package:stylish_app/features/product/domain/entities/variant_entity.dart';
 
 class ProductEntity {
@@ -18,6 +19,7 @@ class ProductEntity {
   final List<String> images;
 
   final List<VariantEntity> variants;
+  final String? collectionId;
 
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -34,6 +36,7 @@ class ProductEntity {
     required this.isAvailable,
     required this.images,
     required this.variants,
+    this.collectionId,
     required this.createdAt,
     required this.updatedAt,
   });

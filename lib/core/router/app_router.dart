@@ -7,6 +7,7 @@ import 'package:stylish_app/features/auth/presentation/view_model/register_cubit
 import 'package:stylish_app/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/login_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/register_view.dart';
+import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 import 'package:stylish_app/features/home/presentation/views/home_view.dart';
 import 'package:stylish_app/features/home/presentation/views/layout.dart';
 import 'package:stylish_app/features/onboarding/presentation/view/onboarding_view.dart';
@@ -49,7 +50,13 @@ class AppRouter {
           child: const ForgotPasswordView(),
         ),
       ),
-      GoRoute(path: '/home', builder: (context, state) => const HomeView()),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => BlocProvider<HomeCubit>(
+          create: (context) => getIt<HomeCubit>()..getHeroSections(),
+          child: const HomeView(),
+        ),
+      ),
       GoRoute(path: '/layout', builder: (context, state) => const Layout()),
     ],
   );

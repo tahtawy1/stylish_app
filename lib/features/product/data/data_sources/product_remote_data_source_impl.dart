@@ -12,7 +12,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     try {
       final result = await firestore.collection('products').get();
       final products = result.docs
-          .map((e) => ProductModel.fromJson(e.data()!))
+          .map((e) => ProductModel.fromJson(e.data()))
           .toList();
       return products;
     } catch (e) {

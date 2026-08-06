@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stylish_app/features/product/data/models/collection_model.dart';
 import 'package:stylish_app/features/product/data/models/variant_model.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
@@ -15,6 +16,7 @@ class ProductModel extends ProductEntity {
     required super.isAvailable,
     required super.images,
     required super.variants,
+    super.collectionId,
     required super.createdAt,
     required super.updatedAt,
   });
@@ -30,20 +32,28 @@ class ProductModel extends ProductEntity {
       averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,
-      images: (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
-      variants: (json['variants'] as List<dynamic>?)
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      variants:
+          (json['variants'] as List<dynamic>?)
               ?.map((e) => VariantModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      collectionId: json['collectionId'],
       createdAt: json['createdAt'] != null
           ? (json['createdAt'] is Timestamp
-              ? (json['createdAt'] as Timestamp).toDate()
-              : DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now())
+                ? (json['createdAt'] as Timestamp).toDate()
+                : DateTime.tryParse(json['createdAt'].toString()) ??
+                      DateTime.now())
           : DateTime.now(),
       updatedAt: json['updatedAt'] != null
           ? (json['updatedAt'] is Timestamp
-              ? (json['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now())
+                ? (json['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(json['updatedAt'].toString()) ??
+                      DateTime.now())
           : DateTime.now(),
     );
   }
@@ -61,16 +71,19 @@ class ProductModel extends ProductEntity {
       'isAvailable': isAvailable,
       'images': images,
       'variants': variants
-          .map((v) => VariantModel(
-                id: v.id,
-                color: v.color,
-                size: v.size,
-                price: v.price,
-                quantity: v.quantity,
-                isAvailable: v.isAvailable,
-                images: v.images,
-              ).toJson())
+          .map(
+            (v) => VariantModel(
+              id: v.id,
+              color: v.color,
+              size: v.size,
+              price: v.price,
+              quantity: v.quantity,
+              isAvailable: v.isAvailable,
+              images: v.images,
+            ).toJson(),
+          )
           .toList(),
+      'collectionId': collectionId,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };

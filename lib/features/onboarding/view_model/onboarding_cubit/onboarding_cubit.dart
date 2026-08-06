@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_app/core/error/failure.dart';
 import 'package:stylish_app/features/onboarding/domain/repositories/onboarding_repository.dart';
 
@@ -12,16 +11,13 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   Future<void> checkOnboardingStatus() async {
     final result = await repository.isOnboardingSeen();
-    result.fold(
-      (failure) => emit(OnboardingError(failure)),
-      (isSeen) {
-        if (isSeen) {
-          emit(NavigateToAuth());
-        } else {
-          emit(OnboardingInitial());
-        }
-      },
-    );
+    result.fold((failure) => emit(OnboardingError(failure)), (isSeen) {
+      if (isSeen) {
+        emit(NavigateToAuth());
+      } else {
+        emit(OnboardingInitial());
+      }
+    });
   }
 
   Future<void> saveOnboardingSeen() async {
