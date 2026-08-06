@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
-import 'package:stylish_app/features/home/domain/entities/product_entity.dart';
+import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -36,17 +36,6 @@ class ProductCard extends StatelessWidget {
             style: context.textStyle.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
-
-          // Subtitle / Category
-          Text(
-            product.category,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.textStyle.bodySmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 8),
@@ -84,7 +73,7 @@ class _RatingWidget extends StatelessWidget {
         const Icon(Icons.star_rounded, size: 16, color: Color(0xFFFFC107)),
         const SizedBox(width: 4),
         Text(
-          product.rating.toStringAsFixed(1),
+          product.averageRating.toStringAsFixed(1),
           style: context.textStyle.bodySmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: context.colors.onSurface,
@@ -112,7 +101,7 @@ class _ImageWithFavBtn extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                product.image,
+                product.images.first,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
@@ -133,13 +122,9 @@ class _ImageWithFavBtn extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                product.isFavorite
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
+                Icons.favorite_border_rounded,
                 size: 18,
-                color: product.isFavorite
-                    ? AppColors.red
-                    : context.colors.onSurface,
+                color: context.colors.onSurface,
               ),
             ),
           ),

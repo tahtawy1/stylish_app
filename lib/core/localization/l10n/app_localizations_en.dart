@@ -189,4 +189,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get newArrivals => 'New Arrivals';
+
+  @override
+  String get poundSymbol => 'LE';
 }

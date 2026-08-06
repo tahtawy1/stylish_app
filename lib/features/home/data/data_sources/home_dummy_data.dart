@@ -1,66 +1,123 @@
-import 'package:flutter/material.dart';
-import 'package:stylish_app/features/home/domain/entities/product_entity.dart';
-
-class CategoryEntity {
-  final String id;
-  final String label;
-  final IconData icon;
-
-  const CategoryEntity({
-    required this.id,
-    required this.label,
-    required this.icon,
-  });
-}
+import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
+import 'package:stylish_app/features/product/domain/entities/variant_entity.dart';
 
 class HomeDummyData {
-  static const List<CategoryEntity> categories = [
-    CategoryEntity(id: '1', label: 'All Items', icon: Icons.grid_view_rounded),
-    CategoryEntity(id: '2', label: 'Dress', icon: Icons.checkroom_rounded),
-    CategoryEntity(id: '3', label: 'T-Shirt', icon: Icons.dry_cleaning_rounded),
-    CategoryEntity(
-      id: '4',
-      label: 'Pants',
-      icon: Icons.accessibility_new_rounded,
-    ),
-  ];
-
-  static const List<ProductEntity> products = [
+  static final List<ProductEntity> products = [
     ProductEntity(
       id: '1',
-      title: 'Modern Light Clothes',
-      category: 'T-Shirt',
-      price: 212.99,
-      rating: 5.0,
-      image: 'assets/images/product_1.png',
-      isFavorite: false,
+      title: 'Oversized Black T-Shirt',
+      description: 'Premium oversized cotton t-shirt for everyday wear.',
+      categoryId: 'tshirts',
+      price: 499,
+      discountPercentage: 20,
+      averageRating: 4.8,
+      reviewCount: 142,
+      isAvailable: true,
+      images: const ['https://picsum.photos/500/500?random=8'],
+      variants: [
+        VariantEntity(
+          id: 'v1',
+          color: 'Black',
+          size: 'M',
+          quantity: 15,
+          isAvailable: true,
+          images: const ['https://picsum.photos/500/500?random=8'],
+          price: 500,
+        ),
+        VariantEntity(
+          id: 'v2',
+          color: 'Black',
+          size: 'L',
+          quantity: 8,
+          isAvailable: true,
+          images: const ['https://picsum.photos/500/500?random=8'],
+          price: 1000,
+        ),
+      ],
+      collectionId: 'summer',
+      createdAt: DateTime(2026, 8, 1),
+      updatedAt: DateTime(2026, 8, 1),
     ),
+
     ProductEntity(
       id: '2',
-      title: 'Light Dress Bless',
-      category: 'Dress modern',
-      price: 162.99,
-      rating: 5.0,
-      image: 'assets/images/Product 2.png',
-      isFavorite: true,
+      title: 'Slim Fit Jeans',
+      description: 'Comfortable slim fit blue jeans.',
+      categoryId: 'jeans',
+      price: 799,
+      discountPercentage: null,
+      averageRating: 4.9,
+      reviewCount: 231,
+      isAvailable: true,
+      images: const ['https://picsum.photos/500/500?random=18'],
+      variants: [
+        VariantEntity(
+          id: 'v1',
+          color: 'Blue',
+          size: '32',
+          quantity: 10,
+          isAvailable: true,
+          images: const ['https://picsum.photos/500/500?random=18'],
+          price: 1200,
+        ),
+      ],
+      collectionId: 'casual',
+      createdAt: DateTime(2026, 7, 25),
+      updatedAt: DateTime(2026, 7, 25),
     ),
+
     ProductEntity(
       id: '3',
-      title: 'Cool Urban Jacket',
-      category: 'Jacket',
-      price: 185.00,
-      rating: 4.9,
-      image: 'assets/images/product_3.png',
-      isFavorite: false,
+      title: 'Grey Hoodie',
+      description: 'Warm fleece hoodie for winter.',
+      categoryId: 'hoodies',
+      price: 999,
+      discountPercentage: 15,
+      averageRating: 4.7,
+      reviewCount: 87,
+      isAvailable: true,
+      images: const ['https://picsum.photos/500/500?random=28'],
+      variants: [
+        VariantEntity(
+          id: 'v1',
+          color: 'Grey',
+          size: 'L',
+          quantity: 5,
+          isAvailable: true,
+          images: const ['https://picsum.photos/500/500?random=28'],
+          price: 600,
+        ),
+      ],
+      collectionId: 'winter',
+      createdAt: DateTime(2026, 7, 15),
+      updatedAt: DateTime(2026, 7, 15),
     ),
+
     ProductEntity(
       id: '4',
-      title: 'Yellow Silk Top',
-      category: 'Top modern',
-      price: 129.50,
-      rating: 4.8,
-      image: 'assets/images/product_4.png',
-      isFavorite: false,
+      title: 'White Oxford Shirt',
+      description: 'Classic Oxford shirt suitable for formal occasions.',
+      categoryId: 'shirts',
+      price: 699,
+      discountPercentage: 10,
+      averageRating: 4.6,
+      reviewCount: 64,
+      isAvailable: true,
+      images: const ['assets/images/product_4.png'],
+      variants: [
+        VariantEntity(
+          id: 'v1',
+          color: 'White',
+          size: 'M',
+          quantity: 12,
+          isAvailable: true,
+          images: const ['assets/images/product_4.png'],
+          price: 265,
+        ),
+      ],
+      collectionId: 'formal',
+      createdAt: DateTime(2026, 6, 20),
+      updatedAt: DateTime(2026, 6, 20),
     ),
   ];
 }

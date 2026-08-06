@@ -57,5 +57,6 @@
     "eveningGreeting": "Good evening",
     "categories": "Categories",
     "seeMore": "See more",
-    "newArrivals": "New Arrivals"
+    "newArrivals": "New Arrivals",
+    "poundSymbol": "LE"
 }

@@ -447,6 +447,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Arrivals'**
   String get newArrivals;
+
+  /// No description provided for @poundSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'LE'**
+  String get poundSymbol;
 }
 
 class _AppLocalizationsDelegate

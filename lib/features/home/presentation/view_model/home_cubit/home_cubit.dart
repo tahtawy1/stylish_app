@@ -5,7 +5,7 @@ import 'package:stylish_app/features/category/domain/entities/category_entity.da
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/hero/domain/entities/hero_section_entity.dart';
 import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
-import 'package:stylish_app/features/home/domain/entities/product_entity.dart';
+import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 part 'home_state.dart';
 
