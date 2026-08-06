@@ -180,4 +180,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eveningGreeting => 'Good evening';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get newArrivals => 'New Arrivals';
 }

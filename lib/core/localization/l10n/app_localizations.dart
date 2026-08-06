@@ -429,6 +429,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good evening'**
   String get eveningGreeting;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// No description provided for @newArrivals.
+  ///
+  /// In en, this message translates to:
+  /// **'New Arrivals'**
+  String get newArrivals;
 }
 
 class _AppLocalizationsDelegate

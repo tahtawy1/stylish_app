@@ -53,7 +53,7 @@ class AppRouter {
       GoRoute(
         path: '/home',
         builder: (context, state) => BlocProvider<HomeCubit>(
-          create: (context) => getIt<HomeCubit>()..getHeroSections(),
+          create: (context) => getIt<HomeCubit>()..loadHome(),
           child: const HomeView(),
         ),
       ),

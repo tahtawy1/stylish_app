@@ -16,6 +16,11 @@ import 'package:stylish_app/features/auth/domain/use_cases/sign_with_google_use_
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
+import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source.dart';
+import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source_impl.dart';
+import 'package:stylish_app/features/category/data/repositories/category_repository_impl.dart';
+import 'package:stylish_app/features/category/domain/repositories/category_repository.dart';
+import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
 import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
@@ -115,7 +120,23 @@ Future<void> setupLocators() async {
   getIt.registerLazySingleton<GetHeroSectionsUseCase>(
     () => GetHeroSectionsUseCase(repository: getIt<HeroRepository>()),
   );
+
+  // Category
+  getIt.registerLazySingleton<CategoryRemoteDataSource>(
+    () => CategoryRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(remoteDataSource: getIt<CategoryRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetCategoriesUseCase>(
+    () => GetCategoriesUseCase(repository: getIt<CategoryRepository>()),
+  );
+
+  // Home
   getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<GetHeroSectionsUseCase>()),
+    () => HomeCubit(
+      getHeroSectionsUseCase: getIt<GetHeroSectionsUseCase>(),
+      getCategoriesUseCase: getIt<GetCategoriesUseCase>(),
+    ),
   );
 }

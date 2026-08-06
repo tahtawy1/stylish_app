@@ -21,18 +21,19 @@ class _HeroSectionState extends State<HeroSection> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        if (state is HomeLoading || state is HomeInitial) {
+        if (state.status == HomeStatus.loading ||
+            state.status == HomeStatus.initial) {
           return const SizedBox(
             height: 200,
             child: Center(child: CircularProgressIndicator()),
           );
-        } else if (state is HomeError) {
+        } else if (state.status == HomeStatus.failure) {
           return SizedBox(
             height: 200,
-            child: Center(child: Text(state.message)),
+            child: Center(child: Text(state.errorMessage ?? 'حدث خطأ')),
           );
-        } else if (state is HomeLoaded) {
-          if (state.heroSections.isEmpty) {
+        } else if (state.status == HomeStatus.success) {
+          if (state.heroes.isEmpty) {
             return const SizedBox.shrink();
           }
           return Column(
@@ -41,22 +42,22 @@ class _HeroSectionState extends State<HeroSection> {
               Stack(
                 children: [
                   CarouselSlider.builder(
-                    itemCount: state.heroSections.length,
+                    itemCount: state.heroes.length,
                     itemBuilder: (context, index, realIndex) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: _HeroCard(hero: state.heroSections[index]),
+                          child: _HeroCard(hero: state.heroes[index]),
                         ),
                       );
                     },
                     options: CarouselOptions(
                       height: 200,
-                      autoPlay: state.heroSections.length > 1,
+                      autoPlay: state.heroes.length > 1,
                       autoPlayInterval: const Duration(seconds: 5),
                       enlargeCenterPage: false,
-                      enableInfiniteScroll: state.heroSections.length > 1,
+                      enableInfiniteScroll: state.heroes.length > 1,
                       pauseAutoPlayOnTouch: true,
                       viewportFraction: 1,
                       autoPlayAnimationDuration: const Duration(
@@ -73,7 +74,7 @@ class _HeroSectionState extends State<HeroSection> {
               ),
               const SizedBox(height: 8),
               HeroIndicator(
-                heroesCount: state.heroSections.length,
+                heroesCount: state.heroes.length,
                 currentPage: currentPage,
               ),
             ],

@@ -54,5 +54,8 @@
     "searchHintText": "Search clothes . . .",
     "morningGreeting": "Good morning",
     "afternoonGreeting": "Good afternoon",
-    "eveningGreeting": "Good evening"
+    "eveningGreeting": "Good evening",
+    "categories": "Categories",
+    "seeMore": "See more",
+    "newArrivals": "New Arrivals"
 }
