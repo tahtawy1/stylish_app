@@ -6,6 +6,9 @@ abstract class ProductRemoteDataSource {
   // delete product
   // get all products
   Future<List<ProductModel>> getAllProducts();
+  Future<List<ProductModel>> getNewArrivalsProducts({int limit});
+  Future<List<ProductModel>> getBestSellersProducts({int limit});
+  Future<List<ProductModel>> getOnSaleProducts({int limit});
   // get product by id
   // get products by category
 }

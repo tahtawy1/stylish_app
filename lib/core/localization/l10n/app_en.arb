@@ -58,5 +58,7 @@
     "categories": "Categories",
     "seeMore": "See more",
     "newArrivals": "New Arrivals",
-    "poundSymbol": "LE"
+    "poundSymbol": "LE",
+    "bestSellers": "Best Sellers",
+    "onSale": "On Sale"
 }

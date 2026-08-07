@@ -20,6 +20,7 @@ class _LayoutState extends State<Layout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: screens[currentIndex],
       bottomNavigationBar: SafeArea(
         child: Padding(

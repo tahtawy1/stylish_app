@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:stylish_app/features/product/data/models/collection_model.dart';
 import 'package:stylish_app/features/product/data/models/variant_model.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
@@ -11,6 +10,7 @@ class ProductModel extends ProductEntity {
     required super.categoryId,
     required super.price,
     required super.discountPercentage,
+    required super.totalSales,
     required super.averageRating,
     required super.reviewCount,
     required super.isAvailable,
@@ -29,6 +29,7 @@ class ProductModel extends ProductEntity {
       categoryId: json['categoryId'] ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       discountPercentage: (json['discountPercentage'] as num?)?.toDouble(),
+      totalSales: (json['totalSales'] as num?)?.toInt() ?? 0,
       averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,
@@ -66,6 +67,7 @@ class ProductModel extends ProductEntity {
       'categoryId': categoryId,
       'price': price,
       'discountPercentage': discountPercentage,
+      'totalSales': totalSales,
       'averageRating': averageRating,
       'reviewCount': reviewCount,
       'isAvailable': isAvailable,

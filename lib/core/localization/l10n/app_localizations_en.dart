@@ -192,4 +192,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get poundSymbol => 'LE';
+
+  @override
+  String get bestSellers => 'Best Sellers';
+
+  @override
+  String get onSale => 'On Sale';
 }

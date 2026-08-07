@@ -17,4 +17,44 @@ class ProductRepositoryImpl implements ProductRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getNewArrivalsProducts({
+    int limit = 20,
+  }) async {
+    try {
+      final products = await productDataSource.getNewArrivalsProducts(
+        limit: limit,
+      );
+      return Right(List<ProductEntity>.from(products));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getBestSellersProducts({
+    int limit = 20,
+  }) async {
+    try {
+      final products = await productDataSource.getBestSellersProducts(
+        limit: limit,
+      );
+      return Right(List<ProductEntity>.from(products));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getOnSaleProducts({
+    int limit = 20,
+  }) async {
+    try {
+      final products = await productDataSource.getOnSaleProducts(limit: limit);
+      return Right(List<ProductEntity>.from(products));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

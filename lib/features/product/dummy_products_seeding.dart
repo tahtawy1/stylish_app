@@ -28,47 +28,131 @@ Future<void> seedProducts() async {
     ),
   ];
 
-  final dummyProducts = List.generate(10, (index) {
+  final categories = ['hoodies', 'jackets', 'jeans', 'pants', 'shirts'];
+
+  final productNames = {
+    'hoodies': [
+      'Essential Hoodie',
+      'Oversized Hoodie',
+      'Classic Hoodie',
+      'Sport Hoodie',
+      'Urban Hoodie',
+      'Premium Hoodie',
+      'Zip Hoodie',
+      'Cotton Hoodie',
+      'Relaxed Hoodie',
+      'Street Hoodie',
+    ],
+    'jackets': [
+      'Bomber Jacket',
+      'Denim Jacket',
+      'Leather Jacket',
+      'Puffer Jacket',
+      'Windbreaker Jacket',
+      'Classic Jacket',
+      'Winter Jacket',
+      'Casual Jacket',
+      'Slim Jacket',
+      'Outdoor Jacket',
+    ],
+    'jeans': [
+      'Slim Fit Jeans',
+      'Regular Jeans',
+      'Skinny Jeans',
+      'Straight Jeans',
+      'Relaxed Jeans',
+      'Blue Jeans',
+      'Black Jeans',
+      'Vintage Jeans',
+      'Classic Jeans',
+      'Cargo Jeans',
+    ],
+    'pants': [
+      'Chino Pants',
+      'Cargo Pants',
+      'Jogger Pants',
+      'Slim Pants',
+      'Classic Pants',
+      'Cotton Pants',
+      'Formal Pants',
+      'Casual Pants',
+      'Relaxed Pants',
+      'Track Pants',
+    ],
+    'shirts': [
+      'Oxford Shirt',
+      'Linen Shirt',
+      'Casual Shirt',
+      'Formal Shirt',
+      'Slim Shirt',
+      'Cotton Shirt',
+      'Checked Shirt',
+      'Striped Shirt',
+      'Classic Shirt',
+      'Premium Shirt',
+    ],
+  };
+
+  final dummyProducts = List.generate(50, (index) {
     final docRef = productsCollection.doc();
+
+    final categoryIndex = index ~/ 10;
+    final categoryId = categories[categoryIndex];
+    final title = productNames[categoryId]![index % 10];
+
     final collectionId = dummyCollections[index % dummyCollections.length].id;
+
+    final price = 800 + (index * 75).toDouble();
+    final discount = index.isEven ? 15.0 : 0.0;
 
     final product = ProductModel(
       id: docRef.id,
-      title: 'Nike Air Max ${index + 1}',
-      description: 'Comfortable running shoes with modern design.',
-      categoryId: 'shoes',
-      price: 2500.0 + (index * 150),
-      discountPercentage: index.isEven ? 10.0 : 0.0,
-      averageRating: double.parse((4.2 + (index % 5) * 0.1).toStringAsFixed(1)),
-      reviewCount: 20 + index * 5,
+      title: title,
+      description:
+          '$title made from premium materials with a modern and comfortable design.',
+      categoryId: categoryId,
+      collectionId: collectionId,
+
+      price: price,
+      discountPercentage: discount,
+
+      averageRating: double.parse(
+        (3.8 + (index % 12) * 0.1).toStringAsFixed(1),
+      ),
+
+      reviewCount: 15 + index * 4,
+
+      totalSales: 30 + index * 12,
+
       isAvailable: true,
+
       images: [
         'https://picsum.photos/500/500?random=${index + 1}',
-        'https://picsum.photos/500/500?random=${index + 11}',
-        'https://picsum.photos/500/500?random=${index + 21}',
+        'https://picsum.photos/500/500?random=${index + 101}',
+        'https://picsum.photos/500/500?random=${index + 201}',
       ],
       variants: [
         VariantModel(
           id: 'v1',
           color: 'White',
           size: '42',
-          price: 2500.0 + (index * 150),
-          quantity: 8,
+          price: price,
+          quantity: 10 + (index % 10),
           isAvailable: true,
-          images: ['https://picsum.photos/500/500?random=${index + 31}'],
+          images: ['https://picsum.photos/500/500?random=${index + 301}'],
         ),
         VariantModel(
           id: 'v2',
           color: 'Black',
           size: '43',
-          price: 2600.0 + (index * 150),
-          quantity: 4,
+          price: price + 100,
+          quantity: 5 + (index % 8),
           isAvailable: true,
-          images: ['https://picsum.photos/500/500?random=${index + 41}'],
+          images: ['https://picsum.photos/500/500?random=${index + 401}'],
         ),
       ],
-      collectionId: collectionId,
-      createdAt: now,
+
+      createdAt: now.subtract(Duration(days: index)),
       updatedAt: now,
     );
 
@@ -83,5 +167,5 @@ Future<void> seedProducts() async {
 
   await batch.commit();
 
-  debugPrint('✅ 10 Dummy Products with Collections Added Successfully');
+  debugPrint('✅ 50 Dummy Products Added Successfully');
 }

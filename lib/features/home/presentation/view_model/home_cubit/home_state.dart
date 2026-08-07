@@ -8,7 +8,8 @@ class HomeState {
   final List<CategoryEntity> categories;
   final List<ProductEntity> newArrivals;
   final List<ProductEntity> highRatedProducts;
-  final List<ProductEntity> mostSalesProducts;
+  final List<ProductEntity> bestSellers;
+  final List<ProductEntity> onSaleProducts;
   final String? errorMessage;
 
   const HomeState({
@@ -17,7 +18,8 @@ class HomeState {
     this.categories = const [],
     this.newArrivals = const [],
     this.highRatedProducts = const [],
-    this.mostSalesProducts = const [],
+    this.bestSellers = const [],
+    this.onSaleProducts = const [],
     this.errorMessage,
   });
 
@@ -27,7 +29,8 @@ class HomeState {
     List<CategoryEntity>? categories,
     List<ProductEntity>? newArrivals,
     List<ProductEntity>? highRatedProducts,
-    List<ProductEntity>? mostSalesProducts,
+    List<ProductEntity>? bestSellers,
+    List<ProductEntity>? onSaleProducts,
     String? errorMessage,
   }) {
     return HomeState(
@@ -36,9 +39,9 @@ class HomeState {
       categories: categories ?? this.categories,
       newArrivals: newArrivals ?? this.newArrivals,
       highRatedProducts: highRatedProducts ?? this.highRatedProducts,
-      mostSalesProducts: mostSalesProducts ?? this.mostSalesProducts,
+      bestSellers: bestSellers ?? this.bestSellers,
+      onSaleProducts: onSaleProducts ?? this.onSaleProducts,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
-

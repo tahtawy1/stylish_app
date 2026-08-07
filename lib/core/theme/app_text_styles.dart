@@ -17,6 +17,7 @@ class AppTextStyles {
       fontSize: 20,
       fontWeight: FontWeight.w600, //w500
     ),
+    headlineSmall: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
 
     titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
     titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

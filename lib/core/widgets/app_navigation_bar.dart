@@ -21,8 +21,13 @@ class AppNavigationBar extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainer,
         boxShadow: [
           BoxShadow(
-            color: context.colors.shadow,
+            color: context.colors.shadow.withValues(alpha: 0.5),
             offset: const Offset(0, -15),
+            blurRadius: 25,
+          ),
+          BoxShadow(
+            color: context.colors.shadow,
+            offset: const Offset(0, 15),
             blurRadius: 25,
           ),
         ],

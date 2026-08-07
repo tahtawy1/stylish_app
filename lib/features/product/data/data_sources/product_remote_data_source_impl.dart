@@ -19,4 +19,58 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<List<ProductModel>> getNewArrivalsProducts({int limit = 20}) async {
+    try {
+      final result = await firestore
+          .collection('products')
+          .where('isAvailable', isEqualTo: true)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+      final products = result.docs
+          .map((e) => ProductModel.fromJson(e.data()))
+          .toList();
+      return products;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getBestSellersProducts({int limit = 20}) async {
+    try {
+      final result = await firestore
+          .collection('products')
+          .where('isAvailable', isEqualTo: true)
+          .orderBy('totalSales', descending: true)
+          .limit(limit)
+          .get();
+      final products = result.docs
+          .map((e) => ProductModel.fromJson(e.data()))
+          .toList();
+      return products;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getOnSaleProducts({int limit = 20}) async {
+    try {
+      final result = await firestore
+          .collection('products')
+          .where('isAvailable', isEqualTo: true)
+          .where('discountPercentage', isGreaterThan: 0)
+          .limit(limit)
+          .get();
+      final products = result.docs
+          .map((e) => ProductModel.fromJson(e.data()))
+          .toList();
+      return products;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

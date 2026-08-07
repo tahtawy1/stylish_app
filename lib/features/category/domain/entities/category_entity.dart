@@ -8,4 +8,7 @@ class CategoryEntity {
     required this.name,
     required this.imageUrl,
   });
+
+  factory CategoryEntity.fake() =>
+      CategoryEntity(id: '1', name: 'Category', imageUrl: '');
 }

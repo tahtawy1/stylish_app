@@ -453,6 +453,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'LE'**
   String get poundSymbol;
+
+  /// No description provided for @bestSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Sellers'**
+  String get bestSellers;
+
+  /// No description provided for @onSale.
+  ///
+  /// In en, this message translates to:
+  /// **'On Sale'**
+  String get onSale;
 }
 
 class _AppLocalizationsDelegate

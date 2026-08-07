@@ -1,4 +1,3 @@
-import 'package:stylish_app/features/product/domain/entities/collection_entity.dart';
 import 'package:stylish_app/features/product/domain/entities/variant_entity.dart';
 
 class ProductEntity {
@@ -10,7 +9,7 @@ class ProductEntity {
 
   final double price;
   final double? discountPercentage;
-
+  final int totalSales;
   final double averageRating;
   final int reviewCount;
 
@@ -31,6 +30,7 @@ class ProductEntity {
     required this.categoryId,
     required this.price,
     required this.discountPercentage,
+    required this.totalSales,
     required this.averageRating,
     required this.reviewCount,
     required this.isAvailable,
@@ -40,4 +40,28 @@ class ProductEntity {
     required this.createdAt,
     required this.updatedAt,
   });
+  double get finalPrice {
+    if (discountPercentage == null || discountPercentage! <= 0) {
+      return price;
+    }
+
+    return price - (price * discountPercentage! / 100);
+  }
+
+  factory ProductEntity.fake() => ProductEntity(
+    id: '0',
+    title: 'Product',
+    description: 'Product',
+    categoryId: '0',
+    price: 0,
+    discountPercentage: 0,
+    totalSales: 0,
+    averageRating: 0.0,
+    reviewCount: 0,
+    isAvailable: true,
+    images: [],
+    variants: [],
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 }

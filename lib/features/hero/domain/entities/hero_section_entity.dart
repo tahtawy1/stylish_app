@@ -27,6 +27,19 @@ class HeroSectionEntity {
     required this.isActive,
     required this.priority,
   });
+
+  factory HeroSectionEntity.fake() {
+    return HeroSectionEntity(
+      id: '',
+      title: 'Loading title',
+      subtitle: 'Loading subtitle',
+      imageUrl: '',
+      actionType: HeroActionType.category,
+      actionValue: '',
+      isActive: true,
+      priority: 0,
+    );
+  }
 }
 
 enum HeroActionType { collection, category, product }

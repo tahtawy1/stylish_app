@@ -17,7 +17,7 @@ class CustomHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: context.textStyle.headlineMedium?.copyWith(
+          style: context.textStyle.headlineSmall?.copyWith(
             fontWeight: FontWeight.w900,
             letterSpacing: 1,
           ),
@@ -31,13 +31,13 @@ class CustomHeader extends StatelessWidget {
                   children: [
                     Text(
                       context.l10n.seeMore,
-                      style: context.textStyle.bodyMedium,
+                      style: context.textStyle.bodySmall,
                     ),
                     const SizedBox(width: 1),
                     Icon(
                       Icons.arrow_forward_ios,
                       color: context.colors.primary,
-                      size: 14,
+                      size: 12,
                     ),
                   ],
                 ),
