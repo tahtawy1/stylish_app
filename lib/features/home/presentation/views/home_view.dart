@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
@@ -15,6 +16,10 @@ import 'package:stylish_app/features/home/presentation/widgets/search_section/se
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
+  void _onProductTap(BuildContext context, String productId) {
+    context.push('/product_details', extra: productId);
+  }
+
   @override
   Widget build(BuildContext context) {
     const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 20);
@@ -26,10 +31,7 @@ class HomeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: padding,
-                child: GreetingSection(userName: 'Albert Stevano'),
-              ),
+              const Padding(padding: padding, child: GreetingSection()),
               const SizedBox(height: 20),
               const Padding(padding: padding, child: SearchSection()),
               const SizedBox(height: 20),
@@ -53,7 +55,9 @@ class HomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const NewArrivalsSection(),
+              NewArrivalsSection(
+                onProductTap: (productId) => _onProductTap(context, productId),
+              ),
               const SizedBox(height: 24),
               Padding(
                 padding: padding,
@@ -63,14 +67,18 @@ class HomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const BestSellersSection(),
+              BestSellersSection(
+                onProductTap: (productId) => _onProductTap(context, productId),
+              ),
               const SizedBox(height: 24),
               Padding(
                 padding: padding,
                 child: CustomHeader(title: context.l10n.onSale, onTap: () {}),
               ),
               const SizedBox(height: 10),
-              const OnSaleSection(),
+              OnSaleSection(
+                onProductTap: (productId) => _onProductTap(context, productId),
+              ),
               const SizedBox(height: 100),
             ],
           ),

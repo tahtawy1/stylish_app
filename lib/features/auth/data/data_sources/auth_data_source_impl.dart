@@ -113,9 +113,35 @@ class AuthDataSourceImpl implements AuthDataSource {
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+      if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+        final firebaseUser = userCredential.user!;
+
+        final userModel = UserModel(
+          id: firebaseUser.uid,
+          name: googleUser.displayName ?? '',
+          email: googleUser.email,
+        );
+
+        await saveUser(userModel);
+      }
     } catch (e) {
       log(e.toString());
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<String> getUserName() async {
+    try {
+      final userModel = await firestore
+          .collection('users')
+          .doc(auth.currentUser?.uid)
+          .get();
+      return userModel.data()?['name'] ?? '';
+    } catch (e) {
       throw ServerException(message: e.toString());
     }
   }

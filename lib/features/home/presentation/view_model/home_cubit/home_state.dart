@@ -4,6 +4,7 @@ enum HomeStatus { initial, loading, success, failure }
 
 class HomeState {
   final HomeStatus status;
+  final String userName;
   final List<HeroSectionEntity> heroes;
   final List<CategoryEntity> categories;
   final List<ProductEntity> newArrivals;
@@ -14,6 +15,7 @@ class HomeState {
 
   const HomeState({
     this.status = HomeStatus.initial,
+    this.userName = '',
     this.heroes = const [],
     this.categories = const [],
     this.newArrivals = const [],
@@ -25,6 +27,7 @@ class HomeState {
 
   HomeState copyWith({
     HomeStatus? status,
+    String? userName,
     List<HeroSectionEntity>? heroes,
     List<CategoryEntity>? categories,
     List<ProductEntity>? newArrivals,
@@ -35,6 +38,7 @@ class HomeState {
   }) {
     return HomeState(
       status: status ?? this.status,
+      userName: userName ?? this.userName,
       heroes: heroes ?? this.heroes,
       categories: categories ?? this.categories,
       newArrivals: newArrivals ?? this.newArrivals,

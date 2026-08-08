@@ -1,4 +1,4 @@
-import 'package:stylish_app/features/product/domain/entities/variant_entity.dart';
+import 'package:stylish_app/features/product/domain/entities/color_variant_entity.dart';
 
 class ProductEntity {
   final String id;
@@ -17,7 +17,7 @@ class ProductEntity {
 
   final List<String> images;
 
-  final List<VariantEntity> variants;
+  final List<ColorVariantEntity> colorVariants;
   final String? collectionId;
 
   final DateTime createdAt;
@@ -35,16 +35,16 @@ class ProductEntity {
     required this.reviewCount,
     required this.isAvailable,
     required this.images,
-    required this.variants,
+    required this.colorVariants,
     this.collectionId,
     required this.createdAt,
     required this.updatedAt,
   });
+
   double get finalPrice {
     if (discountPercentage == null || discountPercentage! <= 0) {
       return price;
     }
-
     return price - (price * discountPercentage! / 100);
   }
 
@@ -60,7 +60,7 @@ class ProductEntity {
     reviewCount: 0,
     isAvailable: true,
     images: [],
-    variants: [],
+    colorVariants: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

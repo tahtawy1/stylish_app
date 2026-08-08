@@ -18,4 +18,5 @@ abstract class AuthRepository {
   Either<Failure, bool> emailVerified();
   Future<Either<Failure, void>> signWithGoogle();
   Future<Either<Failure, void>> signWithFacebook();
+  Future<Either<Failure, String>> getUserName();
 }

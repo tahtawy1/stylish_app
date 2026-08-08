@@ -6,7 +6,9 @@ import 'package:stylish_app/features/home/presentation/widgets/home_product_card
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 class OnSaleSection extends StatelessWidget {
-  const OnSaleSection({super.key});
+  final Function(String) onProductTap;
+
+  const OnSaleSection({super.key, required this.onProductTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class OnSaleSection extends StatelessWidget {
                 product: products[index],
                 leftMargin: index == 0 ? 20 : 8,
                 rightMargin: index == products.length - 1 ? 20 : 8,
+                onProductTap: onProductTap,
               ),
             ),
           ),

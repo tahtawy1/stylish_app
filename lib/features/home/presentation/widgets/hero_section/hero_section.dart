@@ -8,7 +8,7 @@ import 'package:stylish_app/core/network/image_placeholder.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
 import 'package:stylish_app/features/hero/domain/entities/hero_section_entity.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
-import 'package:stylish_app/features/home/presentation/widgets/hero_section/hero_indicator.dart';
+import 'package:stylish_app/features/home/presentation/widgets/custom_indicator.dart';
 
 class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
@@ -76,10 +76,7 @@ class _HeroSectionState extends State<HeroSection> {
               ),
               const SizedBox(height: 8),
               if (!isLoading)
-                HeroIndicator(
-                  heroesCount: heroes.length,
-                  currentPage: currentPage,
-                ),
+                CustomIndicator(count: heroes.length, currentPage: currentPage),
             ],
           ),
         );

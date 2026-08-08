@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/greeting_helper.dart';
+import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 import 'package:stylish_app/features/home/presentation/widgets/notification_button.dart';
 
 class GreetingSection extends StatelessWidget {
-  const GreetingSection({
-    super.key,
-    this.userName = 'Albert Stevano',
-    this.onNotificationTap,
-  });
+  const GreetingSection({super.key, this.onNotificationTap});
 
-  final String userName;
   final VoidCallback? onNotificationTap;
 
   @override
@@ -28,12 +26,20 @@ class GreetingSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              userName,
-              style: context.textStyle.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colors.onSurface,
-              ),
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                final isLoading = state.status == HomeStatus.loading;
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: Text(
+                    state.userName,
+                    style: context.textStyle.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

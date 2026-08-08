@@ -14,8 +14,9 @@ class ImagePlaceholder extends StatelessWidget {
       decoration: BoxDecoration(color: AppColors.grey10.withValues(alpha: .5)),
       child: Text(
         context.l10n.appName,
-        style: context.textStyle.headlineLarge?.copyWith(
-          color: AppColors.grey7,
+        style: context.textStyle.headlineMedium?.copyWith(
+          letterSpacing: 2,
+          color: AppColors.grey8,
         ),
       ),
     );

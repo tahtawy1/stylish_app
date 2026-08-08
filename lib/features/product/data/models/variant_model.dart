@@ -5,7 +5,6 @@ class VariantModel extends VariantEntity {
     required super.id,
     required super.color,
     required super.size,
-    required super.price,
     required super.quantity,
     required super.isAvailable,
     required super.images,
@@ -16,10 +15,13 @@ class VariantModel extends VariantEntity {
       id: json['id'] ?? '',
       color: json['color'],
       size: json['size'],
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] ?? true,
-      images: (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
   }
 
@@ -28,7 +30,6 @@ class VariantModel extends VariantEntity {
       'id': id,
       'color': color,
       'size': size,
-      'price': price,
       'quantity': quantity,
       'isAvailable': isAvailable,
       'images': images,

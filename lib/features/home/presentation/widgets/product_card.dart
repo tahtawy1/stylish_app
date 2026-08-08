@@ -8,17 +8,22 @@ class ProductCard extends StatelessWidget {
     super.key,
     required this.product,
     this.onTap,
+    this.onProductTap,
     this.onFavoriteTap,
   });
 
   final ProductEntity product;
   final VoidCallback? onTap;
+  final ValueChanged<ProductEntity>? onProductTap;
   final VoidCallback? onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        onTap?.call();
+        onProductTap?.call(product);
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,

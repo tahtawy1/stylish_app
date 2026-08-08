@@ -11,6 +11,5 @@ void main() async {
     serverClientId:
         '685514868509-5rdu17p5jgmqpdeamsa10e5dqqrb7n1m.apps.googleusercontent.com',
   );
-
   runApp(const App());
 }

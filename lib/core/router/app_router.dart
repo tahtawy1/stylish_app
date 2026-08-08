@@ -13,6 +13,8 @@ import 'package:stylish_app/features/home/presentation/views/layout.dart';
 import 'package:stylish_app/features/onboarding/presentation/view/onboarding_view.dart';
 import 'package:stylish_app/features/onboarding/presentation/view/splash_view.dart';
 import 'package:stylish_app/features/onboarding/view_model/splash_cubit/splash_cubit.dart';
+import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
+import 'package:stylish_app/features/product/presentation/views/product_details_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -58,6 +60,16 @@ class AppRouter {
         ),
       ),
       GoRoute(path: '/layout', builder: (context, state) => const Layout()),
+      GoRoute(
+        path: '/product_details',
+        builder: (context, state) {
+          final productId = state.extra as String;
+          return BlocProvider(
+            create: (context) => getIt<ProductDetailsCubit>(),
+            child: ProductDetailsView(productId: productId),
+          );
+        },
+      ),
     ],
   );
 }

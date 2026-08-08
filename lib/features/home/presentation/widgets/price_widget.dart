@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
-import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 class PriceWidget extends StatelessWidget {
   const PriceWidget({

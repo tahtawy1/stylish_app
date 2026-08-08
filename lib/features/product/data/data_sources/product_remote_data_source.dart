@@ -10,5 +10,6 @@ abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getBestSellersProducts({int limit});
   Future<List<ProductModel>> getOnSaleProducts({int limit});
   // get product by id
+  Future<ProductModel> getProductById({required String id});
   // get products by category
 }

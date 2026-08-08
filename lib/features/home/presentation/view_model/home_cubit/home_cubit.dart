@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_app/core/error/failure.dart';
+import 'package:stylish_app/features/auth/domain/use_cases/get_user_name_use_cases.dart';
 import 'package:stylish_app/features/category/domain/entities/category_entity.dart';
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/hero/domain/entities/hero_section_entity.dart';
@@ -14,6 +15,7 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({
+    required this.getUserNameUseCases,
     required this.getHeroSectionsUseCase,
     required this.getCategoriesUseCase,
     required this.getNewArrivalsProductsUseCase,
@@ -21,6 +23,7 @@ class HomeCubit extends Cubit<HomeState> {
     required this.getOnSaleProductsUseCase,
   }) : super(const HomeState());
 
+  final GetUserNameUseCases getUserNameUseCases;
   final GetHeroSectionsUseCase getHeroSectionsUseCase;
   final GetCategoriesUseCase getCategoriesUseCase;
   final GetNewArrivalsProductsUseCase getNewArrivalsProductsUseCase;
@@ -30,6 +33,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(status: HomeStatus.loading));
 
     final results = await Future.wait<Either<Failure, dynamic>>([
+      getUserNameUseCases(),
       getHeroSectionsUseCase(),
       getCategoriesUseCase(),
       getNewArrivalsProductsUseCase(limit: 5),
@@ -37,19 +41,30 @@ class HomeCubit extends Cubit<HomeState> {
       getOnSaleProductsUseCase(limit: 5),
     ]);
 
-    final heroResult = results[0] as Either<Failure, List<HeroSectionEntity>>;
-    final categoryResult = results[1] as Either<Failure, List<CategoryEntity>>;
+    final userNameResult = results[0] as Either<Failure, String>;
+    final heroResult = results[1] as Either<Failure, List<HeroSectionEntity>>;
+    final categoryResult = results[2] as Either<Failure, List<CategoryEntity>>;
     final newArrivalsResult =
-        results[2] as Either<Failure, List<ProductEntity>>;
-    final bestSellersResult =
         results[3] as Either<Failure, List<ProductEntity>>;
-    final onSaleResult = results[4] as Either<Failure, List<ProductEntity>>;
+    final bestSellersResult =
+        results[4] as Either<Failure, List<ProductEntity>>;
+    final onSaleResult = results[5] as Either<Failure, List<ProductEntity>>;
     String? error;
+    String userName = '';
     List<HeroSectionEntity> heroes = [];
     List<CategoryEntity> categories = [];
     List<ProductEntity> newArrivals = [];
     List<ProductEntity> bestSellers = [];
     List<ProductEntity> onSale = [];
+
+    userNameResult.fold(
+      (failure) => error = failure.message,
+      (data) => userName = data,
+    );
+    if (error != null) {
+      emit(state.copyWith(status: HomeStatus.failure, errorMessage: error));
+      return;
+    }
 
     heroResult.fold(
       (failure) => error = failure.message,
@@ -104,6 +119,7 @@ class HomeCubit extends Cubit<HomeState> {
     emit(
       state.copyWith(
         status: HomeStatus.success,
+        userName: userName,
         heroes: heroes,
         categories: categories,
         newArrivals: newArrivals,

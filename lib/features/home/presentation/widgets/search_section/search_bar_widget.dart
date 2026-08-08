@@ -84,16 +84,16 @@ class _CustomSearch extends SearchDelegate {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    return SizedBox();
+    return const SizedBox();
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return SizedBox();
+    return const SizedBox();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return SizedBox();
+    return const SizedBox();
   }
 }

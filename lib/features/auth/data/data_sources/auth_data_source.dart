@@ -13,4 +13,5 @@ abstract class AuthDataSource {
   bool emailVerified();
   Future<void> signWithGoogle();
   Future<void> signWithFacebook();
+  Future<String> getUserName();
 }

@@ -73,4 +73,17 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<ProductModel> getProductById({required String id}) async {
+    try {
+      final result = await firestore.collection('products').doc(id).get();
+      if (result.exists) {
+        return ProductModel.fromJson(result.data()!);
+      }
+      throw Exception('Product not found'); // TODO: add a custom exception
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

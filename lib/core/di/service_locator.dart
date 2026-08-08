@@ -9,6 +9,7 @@ import 'package:stylish_app/features/auth/data/repositories/auth_repository_impl
 import 'package:stylish_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/email_verified_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/forgot_password_use_case.dart';
+import 'package:stylish_app/features/auth/domain/use_cases/get_user_name_use_cases.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/register_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/send_email_verification_use_case.dart';
@@ -41,6 +42,8 @@ import 'package:stylish_app/features/product/domain/repositories/product_reposit
 import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
+import 'package:stylish_app/features/product/domain/use_cases/get_product_by_id.dart';
+import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -98,6 +101,10 @@ Future<void> setupLocators() async {
   getIt.registerLazySingleton<SignWithGoogleUseCase>(
     () => SignWithGoogleUseCase(authRepository: getIt<AuthRepository>()),
   );
+
+  getIt.registerLazySingleton<GetUserNameUseCases>(
+    () => GetUserNameUseCases(authRepository: getIt<AuthRepository>()),
+  );
   getIt.registerFactory<LoginCubit>(
     () => LoginCubit(
       loginUseCase: getIt<LoginUseCase>(),
@@ -118,6 +125,7 @@ Future<void> setupLocators() async {
     ),
   );
 
+  // Home
   getIt.registerLazySingleton<HeroRemoteDataSource>(
     () => HeroRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
   );
@@ -154,6 +162,10 @@ Future<void> setupLocators() async {
         GetOnSaleProductsUseCase(productRepository: getIt<ProductRepository>()),
   );
 
+  getIt.registerLazySingleton<GetProductByIdUseCase>(
+    () => GetProductByIdUseCase(productRepository: getIt<ProductRepository>()),
+  );
+
   // Category
   getIt.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
@@ -170,11 +182,19 @@ Future<void> setupLocators() async {
   // Home
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(
+      getUserNameUseCases: getIt<GetUserNameUseCases>(),
       getHeroSectionsUseCase: getIt<GetHeroSectionsUseCase>(),
       getCategoriesUseCase: getIt<GetCategoriesUseCase>(),
       getNewArrivalsProductsUseCase: getIt<GetNewArrivalsProductsUseCase>(),
       getBestSellersProductsUseCase: getIt<GetBestSellersProductsUseCase>(),
       getOnSaleProductsUseCase: getIt<GetOnSaleProductsUseCase>(),
+    ),
+  );
+
+  // Product Details
+  getIt.registerFactory<ProductDetailsCubit>(
+    () => ProductDetailsCubit(
+      getProductByIdUseCase: getIt<GetProductByIdUseCase>(),
     ),
   );
 }

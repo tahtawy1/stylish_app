@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stylish_app/features/product/data/models/collection_model.dart';
+import 'package:stylish_app/features/product/data/models/color_variant_model.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
-import 'package:stylish_app/features/product/data/models/variant_model.dart';
+import 'package:stylish_app/features/product/data/models/size_variant_model.dart';
 
 Future<void> seedProducts() async {
   final firestore = FirebaseFirestore.instance;
@@ -93,70 +94,119 @@ Future<void> seedProducts() async {
     ],
   };
 
+  final colors = ['Black', 'White', 'Navy', 'Gray', 'Beige', 'Olive', 'Brown'];
+
+  final sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
+
   final dummyProducts = List.generate(50, (index) {
     final docRef = productsCollection.doc();
 
     final categoryIndex = index ~/ 10;
     final categoryId = categories[categoryIndex];
+
     final title = productNames[categoryId]![index % 10];
 
     final collectionId = dummyCollections[index % dummyCollections.length].id;
 
     final price = 800 + (index * 75).toDouble();
+
     final discount = index.isEven ? 15.0 : 0.0;
 
-    final product = ProductModel(
-      id: docRef.id,
-      title: title,
-      description:
-          '$title made from premium materials with a modern and comfortable design.',
-      categoryId: categoryId,
-      collectionId: collectionId,
+    // Every product has 3-5 colors.
+    final colorCount = 3 + (index % 3);
 
-      price: price,
-      discountPercentage: discount,
+    final productColors = colors.take(colorCount).toList();
 
-      averageRating: double.parse(
-        (3.8 + (index % 12) * 0.1).toStringAsFixed(1),
+    final colorVariants = <ColorVariantModel>[];
+
+    for (var colorIndex = 0; colorIndex < productColors.length; colorIndex++) {
+      final color = productColors[colorIndex];
+
+      // Every color has 4-7 sizes.
+      final sizeCount = 4 + ((index + colorIndex) % 4);
+
+      final availableSizes = sizes.take(sizeCount).toList();
+
+      final sizeVariants = <SizeVariantModel>[];
+
+      for (var sizeIndex = 0; sizeIndex < availableSizes.length; sizeIndex++) {
+        final size = availableSizes[sizeIndex];
+
+        // Make some sizes unavailable for UI testing.
+        final isAvailable =
+            !(index % 7 == 0 && sizeIndex == availableSizes.length - 1);
+
+        final quantity = isAvailable
+            ? 5 + ((index + colorIndex + sizeIndex) % 20)
+            : 0;
+
+        sizeVariants.add(
+          SizeVariantModel(
+            id: 'size_${index}_${colorIndex}_$sizeIndex',
+            size: size,
+            quantity: quantity,
+            isAvailable: isAvailable,
+          ),
+        );
+      }
+
+      colorVariants.add(
+        ColorVariantModel(
+          id: 'color_${index}_$colorIndex',
+          color: color,
+
+          // Images belong to the color, NOT the size.
+          images: [
+            'https://picsum.photos/500/500?random=${index + 301 + colorIndex * 10}',
+            'https://picsum.photos/500/500?random=${index + 401 + colorIndex * 10}',
+            'https://picsum.photos/500/500?random=${index + 501 + colorIndex * 10}',
+          ],
+
+          sizes: sizeVariants,
+        ),
+      );
+    }
+
+    return MapEntry(
+      docRef,
+      ProductModel(
+        id: docRef.id,
+        title: title,
+        description:
+            '$title made from premium materials with a modern '
+            'and comfortable design. Perfect for everyday wear '
+            'with a comfortable fit and high-quality finish.',
+        categoryId: categoryId,
+        collectionId: collectionId,
+
+        // One price for all color/size combinations.
+        price: price,
+        discountPercentage: discount,
+
+        averageRating: double.parse(
+          (3.8 + (index % 12) * 0.1).toStringAsFixed(1),
+        ),
+
+        reviewCount: 15 + index * 4,
+        totalSales: 30 + index * 12,
+        isAvailable: true,
+
+        // General product images.
+        images: [
+          'https://picsum.photos/500/500?random=${index + 1}',
+          'https://picsum.photos/500/500?random=${index + 101}',
+          'https://picsum.photos/500/500?random=${index + 201}',
+        ],
+
+        // Product
+        //   └── colorVariants
+        //         └── sizes
+        colorVariants: colorVariants,
+
+        createdAt: now.subtract(Duration(days: index)),
+        updatedAt: now,
       ),
-
-      reviewCount: 15 + index * 4,
-
-      totalSales: 30 + index * 12,
-
-      isAvailable: true,
-
-      images: [
-        'https://picsum.photos/500/500?random=${index + 1}',
-        'https://picsum.photos/500/500?random=${index + 101}',
-        'https://picsum.photos/500/500?random=${index + 201}',
-      ],
-      variants: [
-        VariantModel(
-          id: 'v1',
-          color: 'White',
-          size: '42',
-          price: price,
-          quantity: 10 + (index % 10),
-          isAvailable: true,
-          images: ['https://picsum.photos/500/500?random=${index + 301}'],
-        ),
-        VariantModel(
-          id: 'v2',
-          color: 'Black',
-          size: '43',
-          price: price + 100,
-          quantity: 5 + (index % 8),
-          isAvailable: true,
-          images: ['https://picsum.photos/500/500?random=${index + 401}'],
-        ),
-      ],
-
-      createdAt: now.subtract(Duration(days: index)),
-      updatedAt: now,
     );
-
-    return MapEntry(docRef, product);
   });
 
   final batch = firestore.batch();

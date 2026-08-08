@@ -60,5 +60,11 @@
     "newArrivals": "New Arrivals",
     "poundSymbol": "LE",
     "bestSellers": "Best Sellers",
-    "onSale": "On Sale"
+    "onSale": "On Sale",
+    "chooseSize": "Choose Size",
+    "color": "Color",
+    "addToCart": "Add to Cart",
+    "reviews": "reviews",
+    "readMore": "Read More. . .",
+    "priceLabel": "Price"
 }

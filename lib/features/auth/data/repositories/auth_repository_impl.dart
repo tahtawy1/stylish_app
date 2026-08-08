@@ -104,4 +104,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> getUserName() async {
+    try {
+      final result = await authDataSource.getUserName();
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
 }

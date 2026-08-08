@@ -18,5 +18,6 @@ abstract class ProductRepository {
     int limit = 20,
   });
   // get product by id
+  Future<Either<Failure, ProductEntity>> getProductById({required String id});
   // get products by category
 }

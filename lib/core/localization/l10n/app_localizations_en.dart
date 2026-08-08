@@ -198,4 +198,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onSale => 'On Sale';
+
+  @override
+  String get chooseSize => 'Choose Size';
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get addToCart => 'Add to Cart';
+
+  @override
+  String get reviews => 'reviews';
+
+  @override
+  String get readMore => 'Read More. . .';
+
+  @override
+  String get priceLabel => 'Price';
 }

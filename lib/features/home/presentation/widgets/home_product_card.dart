@@ -11,12 +11,14 @@ class HomeProductCard extends StatelessWidget {
   final ProductEntity product;
   final double leftMargin;
   final double rightMargin;
+  final Function(String) onProductTap;
 
   const HomeProductCard({
     super.key,
     required this.product,
     required this.leftMargin,
     required this.rightMargin,
+    required this.onProductTap,
   });
 
   @override
@@ -25,32 +27,35 @@ class HomeProductCard extends StatelessWidget {
       padding: EdgeInsets.only(left: leftMargin, right: rightMargin),
       child: Stack(
         children: [
-          SizedBox(
-            width: 180,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: SizedBox(
-                    height: 180,
-                    width: 180,
-                    child: product.images.isEmpty
-                        ? _ProductBone(product: product)
-                        : CachedNetworkImage(
-                            imageUrl: product.images.first,
-                            fit: BoxFit.cover,
-                            placeholder: (_, __) => const ImagePlaceholder(),
-                            errorWidget: (_, __, ___) =>
-                                const ImagePlaceholder(),
-                          ),
+          GestureDetector(
+            onTap: () => onProductTap(product.id),
+            child: SizedBox(
+              width: 180,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: SizedBox(
+                      height: 180,
+                      width: 180,
+                      child: _cardImageUrl(product) == null
+                          ? _ProductBone(product: product)
+                          : CachedNetworkImage(
+                              imageUrl: _cardImageUrl(product)!,
+                              fit: BoxFit.cover,
+                              placeholder: (_, _) => const ImagePlaceholder(),
+                              errorWidget: (_, _, _) =>
+                                  const ImagePlaceholder(),
+                            ),
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                _ProductInfo(product: product),
-              ],
+                  _ProductInfo(product: product),
+                ],
+              ),
             ),
           ),
 
@@ -78,6 +83,13 @@ class HomeProductCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static String? _cardImageUrl(ProductEntity product) {
+    if (product.colorVariants.isNotEmpty) {
+      return product.colorVariants.first.images.firstOrNull;
+    }
+    return null;
   }
 }
 

@@ -465,6 +465,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On Sale'**
   String get onSale;
+
+  /// No description provided for @chooseSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Size'**
+  String get chooseSize;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @addToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Cart'**
+  String get addToCart;
+
+  /// No description provided for @reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'reviews'**
+  String get reviews;
+
+  /// No description provided for @readMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Read More. . .'**
+  String get readMore;
+
+  /// No description provided for @priceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get priceLabel;
 }
 
 class _AppLocalizationsDelegate
