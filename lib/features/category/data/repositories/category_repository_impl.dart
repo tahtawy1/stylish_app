@@ -11,7 +11,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 
   @override
   Future<Either<Failure, List<CategoryEntity>>> getCategories({
-    int limit = 5,
+    int? limit,
   }) async {
     try {
       final result = await remoteDataSource.getCategories(limit: limit);

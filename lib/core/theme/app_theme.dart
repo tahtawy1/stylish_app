@@ -34,6 +34,13 @@ class AppTheme {
         outline: AppColors.grey9,
         shadow: AppColors.white.withValues(alpha: 75),
       ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.white,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        titleSpacing: 0,
+      ),
     );
   }
 
@@ -67,6 +74,13 @@ class AppTheme {
         // Utility
         outline: AppColors.grey4,
         shadow: AppColors.grey1.withValues(alpha: 15),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.grey1,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        titleSpacing: 0,
       ),
     );
   }

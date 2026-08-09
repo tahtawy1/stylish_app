@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/network/image_placeholder.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
+import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/home/presentation/widgets/custom_indicator.dart';
 
 class ProductImageCarousel extends StatefulWidget {
@@ -103,7 +104,7 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
         Positioned(
           top: 16,
           left: 16,
-          child: _CircularIconButton(
+          child: CircularIconButton(
             icon: Icons.arrow_back_ios_new_rounded,
             iconSize: 18,
             onTap: () => context.pop(),
@@ -114,7 +115,7 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
         Positioned(
           top: 16,
           right: 16,
-          child: _CircularIconButton(
+          child: CircularIconButton(
             icon: widget.isFavorite
                 ? Icons.favorite_rounded
                 : Icons.favorite_outline,
@@ -125,48 +126,6 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _CircularIconButton extends StatelessWidget {
-  const _CircularIconButton({
-    required this.icon,
-    required this.onTap,
-    this.iconSize = 20,
-    this.iconColor,
-  });
-
-  final IconData icon;
-  final VoidCallback? onTap;
-  final double iconSize;
-  final Color? iconColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: context.isDarkMode
-              ? AppColors.grey2.withValues(alpha: 220)
-              : AppColors.white.withValues(alpha: 235),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadow.withValues(alpha: 0.15),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: iconSize,
-          color: iconColor ?? context.colors.onSurface,
-        ),
-      ),
     );
   }
 }

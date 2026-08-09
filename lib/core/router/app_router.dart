@@ -7,6 +7,8 @@ import 'package:stylish_app/features/auth/presentation/view_model/register_cubit
 import 'package:stylish_app/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/login_view.dart';
 import 'package:stylish_app/features/auth/presentation/views/register_view.dart';
+import 'package:stylish_app/features/category/presentation/view/categories_view.dart';
+import 'package:stylish_app/features/category/presentation/view_model/category_cubit/category_cubit.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 import 'package:stylish_app/features/home/presentation/views/home_view.dart';
 import 'package:stylish_app/features/home/presentation/views/layout.dart';
@@ -67,6 +69,15 @@ class AppRouter {
           return BlocProvider(
             create: (context) => getIt<ProductDetailsCubit>(),
             child: ProductDetailsView(productId: productId),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/categories',
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => getIt<CategoryCubit>()..loadCategories(),
+            child: const CategoriesView(),
           );
         },
       ),

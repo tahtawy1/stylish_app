@@ -8,7 +8,7 @@ class GetCategoriesUseCase {
 
   GetCategoriesUseCase({required this.repository});
 
-  Future<Either<Failure, List<CategoryEntity>>> call({int limit = 5}) async {
+  Future<Either<Failure, List<CategoryEntity>>> call({int? limit}) async {
     return await repository.getCategories(limit: limit);
   }
 }

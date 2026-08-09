@@ -10,18 +10,20 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   CategoryRemoteDataSourceImpl({required this.firestore});
 
   @override
-  Future<List<CategoryModel>> getCategories({int limit = 5}) async {
+  Future<List<CategoryModel>> getCategories({int? limit}) async {
     try {
-      final snapshot = await firestore
-          .collection('categories')
-          .limit(limit)
-          .get();
+      final collection = firestore.collection('categories');
+
+      final query = limit != null ? collection.limit(limit) : collection;
+
+      final snapshot = await query.get();
+
       return snapshot.docs
           .map((doc) => CategoryModel.fromJson(doc.data()))
           .toList();
     } catch (e) {
       log(e.toString());
-      throw Exception();
+      throw Exception(e.toString());
     }
   }
 }

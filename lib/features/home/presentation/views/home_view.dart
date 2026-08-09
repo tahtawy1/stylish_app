@@ -41,7 +41,9 @@ class HomeView extends StatelessWidget {
                 padding: padding,
                 child: CustomHeader(
                   title: context.l10n.categories,
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/categories');
+                  },
                 ),
               ),
               const SizedBox(height: 10),

@@ -42,7 +42,7 @@ class CategoriesSection extends StatelessWidget {
                         height: 150,
                         width: 150,
                         child: categories[index].imageUrl.isEmpty
-                            ? _CategoryBone(category: categories[index])
+                            ? CategoryBone(category: categories[index])
                             : CachedNetworkImage(
                                 imageUrl: categories[index].imageUrl,
                                 fit: BoxFit.cover,
@@ -57,7 +57,7 @@ class CategoriesSection extends StatelessWidget {
                                       width: double.infinity,
                                       height: double.infinity,
                                     ),
-                                    _CategoryInfo(
+                                    CategoryInfo(
                                       categoryName: categories[index].name,
                                     ),
                                   ],
@@ -79,8 +79,8 @@ class CategoriesSection extends StatelessWidget {
   }
 }
 
-class _CategoryBone extends StatelessWidget {
-  const _CategoryBone({required this.category});
+class CategoryBone extends StatelessWidget {
+  const CategoryBone({required this.category, super.key});
 
   final CategoryEntity category;
 
@@ -93,13 +93,17 @@ class _CategoryBone extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: context.colors.outline.withValues(alpha: .5)),
       ),
-      child: _CategoryInfo(categoryName: category.name, wantGradient: false),
+      child: CategoryInfo(categoryName: category.name, wantGradient: false),
     );
   }
 }
 
-class _CategoryInfo extends StatelessWidget {
-  const _CategoryInfo({this.wantGradient = true, required this.categoryName});
+class CategoryInfo extends StatelessWidget {
+  const CategoryInfo({
+    super.key,
+    this.wantGradient = true,
+    required this.categoryName,
+  });
 
   final String categoryName;
   final bool wantGradient;

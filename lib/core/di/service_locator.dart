@@ -22,6 +22,7 @@ import 'package:stylish_app/features/category/data/data_sources/category_remote_
 import 'package:stylish_app/features/category/data/repositories/category_repository_impl.dart';
 import 'package:stylish_app/features/category/domain/repositories/category_repository.dart';
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
+import 'package:stylish_app/features/category/presentation/view_model/category_cubit/category_cubit.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
 import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
@@ -177,6 +178,10 @@ Future<void> setupLocators() async {
   );
   getIt.registerLazySingleton<GetCategoriesUseCase>(
     () => GetCategoriesUseCase(repository: getIt<CategoryRepository>()),
+  );
+
+  getIt.registerFactory<CategoryCubit>(
+    () => CategoryCubit(getCategoriesUseCase: getIt<GetCategoriesUseCase>()),
   );
 
   // Home
