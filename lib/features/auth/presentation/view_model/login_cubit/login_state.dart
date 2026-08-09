@@ -1,0 +1,20 @@
+part of 'login_cubit.dart';
+
+sealed class LoginState {
+  const LoginState();
+}
+
+final class LoginInitial extends LoginState {}
+
+final class LoginLoading extends LoginState {}
+
+final class LoginSuccess extends LoginState {}
+
+final class LoginError extends LoginState {
+  final String message;
+  const LoginError({required this.message});
+}
+
+final class VerifyEmail extends LoginState {
+  const VerifyEmail();
+}
