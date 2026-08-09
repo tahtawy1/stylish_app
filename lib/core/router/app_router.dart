@@ -15,7 +15,9 @@ import 'package:stylish_app/features/home/presentation/views/layout.dart';
 import 'package:stylish_app/features/onboarding/presentation/view/onboarding_view.dart';
 import 'package:stylish_app/features/onboarding/presentation/view/splash_view.dart';
 import 'package:stylish_app/features/onboarding/view_model/splash_cubit/splash_cubit.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/custom_section_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
+import 'package:stylish_app/features/product/presentation/views/custom_section_view.dart';
 import 'package:stylish_app/features/product/presentation/views/product_details_view.dart';
 
 class AppRouter {
@@ -78,6 +80,16 @@ class AppRouter {
           return BlocProvider(
             create: (context) => getIt<CategoryCubit>()..loadCategories(),
             child: const CategoriesView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/custom_section',
+        builder: (context, state) {
+          final type = state.extra as CustomSectionType;
+          return BlocProvider(
+            create: (context) => getIt<CustomSectionCubit>(),
+            child: CustomSectionView(sectionType: type),
           );
         },
       ),

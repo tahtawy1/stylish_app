@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
+import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
 
 abstract class ProductRemoteDataSource {
   // add product
@@ -6,9 +8,18 @@ abstract class ProductRemoteDataSource {
   // delete product
   // get all products
   Future<List<ProductModel>> getAllProducts();
-  Future<List<ProductModel>> getNewArrivalsProducts({int limit});
-  Future<List<ProductModel>> getBestSellersProducts({int limit});
-  Future<List<ProductModel>> getOnSaleProducts({int limit});
+  Future<PaginatedResult<ProductModel>> getNewArrivalsProducts({
+    int limit,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  });
+  Future<PaginatedResult<ProductModel>> getBestSellersProducts({
+    int limit,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  });
+  Future<PaginatedResult<ProductModel>> getOnSaleProducts({
+    int limit,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  });
   // get product by id
   Future<ProductModel> getProductById({required String id});
   // get products by category

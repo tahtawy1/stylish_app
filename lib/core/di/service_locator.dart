@@ -44,6 +44,7 @@ import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_p
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_product_by_id.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/custom_section_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 
 final getIt = GetIt.instance;
@@ -200,6 +201,15 @@ Future<void> setupLocators() async {
   getIt.registerFactory<ProductDetailsCubit>(
     () => ProductDetailsCubit(
       getProductByIdUseCase: getIt<GetProductByIdUseCase>(),
+    ),
+  );
+
+  // Custom Section
+  getIt.registerFactory<CustomSectionCubit>(
+    () => CustomSectionCubit(
+      getNewArrivalsProductsUseCase: getIt<GetNewArrivalsProductsUseCase>(),
+      getBestSellersProductsUseCase: getIt<GetBestSellersProductsUseCase>(),
+      getOnSaleProductsUseCase: getIt<GetOnSaleProductsUseCase>(),
     ),
   );
 }

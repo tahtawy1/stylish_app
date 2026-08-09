@@ -49,19 +49,19 @@ class ProductEntity {
   }
 
   factory ProductEntity.fake() => ProductEntity(
-    id: '0',
-    title: 'Product',
-    description: 'Product',
-    categoryId: '0',
-    price: 0,
-    discountPercentage: 0,
-    totalSales: 0,
-    averageRating: 0.0,
-    reviewCount: 0,
-    isAvailable: true,
-    images: [],
-    colorVariants: [],
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  );
+        id: '0',
+        title: 'Stylish Sample Product Name',
+        description: 'Stylish Sample Product Description',
+        categoryId: '0',
+        price: 99.99,
+        discountPercentage: 0,
+        totalSales: 100,
+        averageRating: 4.5,
+        reviewCount: 20,
+        isAvailable: true,
+        images: const [],
+        colorVariants: const [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
 }

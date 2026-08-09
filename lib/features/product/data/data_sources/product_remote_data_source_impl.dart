@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
+import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   final FirebaseFirestore firestore;
@@ -21,55 +24,89 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductModel>> getNewArrivalsProducts({int limit = 20}) async {
+  Future<PaginatedResult<ProductModel>> getNewArrivalsProducts({
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  }) async {
     try {
-      final result = await firestore
+      final res = firestore
           .collection('products')
           .where('isAvailable', isEqualTo: true)
           .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
+          .limit(limit);
+
+      final QuerySnapshot<Map<String, dynamic>> result;
+      if (lastDocument != null) {
+        result = await res.startAfterDocument(lastDocument).get();
+      } else {
+        result = await res.get();
+      }
       final products = result.docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
-      return products;
+      return PaginatedResult(
+        items: products,
+        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
+        hasMore: result.docs.length == limit,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
   @override
-  Future<List<ProductModel>> getBestSellersProducts({int limit = 20}) async {
+  Future<PaginatedResult<ProductModel>> getBestSellersProducts({
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  }) async {
     try {
-      final result = await firestore
+      final res = firestore
           .collection('products')
           .where('isAvailable', isEqualTo: true)
           .orderBy('totalSales', descending: true)
-          .limit(limit)
-          .get();
+          .limit(limit);
+      final result = lastDocument != null
+          ? await res.startAfterDocument(lastDocument).get()
+          : await res.get();
       final products = result.docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
-      return products;
+      return PaginatedResult(
+        items: products,
+        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
+        hasMore: result.docs.length == limit,
+      );
     } catch (e) {
+      log(e.toString());
       throw Exception(e.toString());
     }
   }
 
   @override
-  Future<List<ProductModel>> getOnSaleProducts({int limit = 20}) async {
+  Future<PaginatedResult<ProductModel>> getOnSaleProducts({
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  }) async {
     try {
-      final result = await firestore
+      final res = firestore
           .collection('products')
           .where('isAvailable', isEqualTo: true)
           .where('discountPercentage', isGreaterThan: 0)
-          .limit(limit)
-          .get();
+          .orderBy('discountPercentage');
+      final result = lastDocument != null
+          ? await res.startAfterDocument(lastDocument).limit(limit).get()
+          : await res.limit(limit).get();
       final products = result.docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
-      return products;
+      return PaginatedResult(
+        items: products,
+        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
+        hasMore: result.docs.length == limit,
+      );
     } catch (e) {
+      log(e.toString());
+
       throw Exception(e.toString());
     }
   }

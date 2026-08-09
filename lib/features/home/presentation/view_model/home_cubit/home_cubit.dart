@@ -6,6 +6,7 @@ import 'package:stylish_app/features/category/domain/entities/category_entity.da
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/hero/domain/entities/hero_section_entity.dart';
 import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
+import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
@@ -44,11 +45,9 @@ class HomeCubit extends Cubit<HomeState> {
     final userNameResult = results[0] as Either<Failure, String>;
     final heroResult = results[1] as Either<Failure, List<HeroSectionEntity>>;
     final categoryResult = results[2] as Either<Failure, List<CategoryEntity>>;
-    final newArrivalsResult =
-        results[3] as Either<Failure, List<ProductEntity>>;
-    final bestSellersResult =
-        results[4] as Either<Failure, List<ProductEntity>>;
-    final onSaleResult = results[5] as Either<Failure, List<ProductEntity>>;
+    final newArrivalsResult = results[3] as Either<Failure, PaginatedResult>;
+    final bestSellersResult = results[4] as Either<Failure, PaginatedResult>;
+    final onSaleResult = results[5] as Either<Failure, PaginatedResult>;
     String? error;
     String userName = '';
     List<HeroSectionEntity> heroes = [];
@@ -88,7 +87,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     newArrivalsResult.fold(
       (failure) => error = failure.message,
-      (data) => newArrivals = data,
+      (data) => newArrivals = data.items as List<ProductEntity>,
     );
 
     if (error != null) {
@@ -98,7 +97,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     bestSellersResult.fold(
       (failure) => error = failure.message,
-      (data) => bestSellers = data,
+      (data) => bestSellers = data.items as List<ProductEntity>,
     );
 
     if (error != null) {
@@ -108,7 +107,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     onSaleResult.fold(
       (failure) => error = failure.message,
-      (data) => onSale = data,
+      (data) => onSale = data.items as List<ProductEntity>,
     );
 
     if (error != null) {

@@ -12,6 +12,7 @@ import 'package:stylish_app/features/home/presentation/widgets/hero_section/hero
 import 'package:stylish_app/features/home/presentation/widgets/new_arrivals_section/new_arrivals_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/on_sale_section/on_sale_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/search_section/search_section.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/custom_section_cubit.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -53,7 +54,12 @@ class HomeView extends StatelessWidget {
                 padding: padding,
                 child: CustomHeader(
                   title: context.l10n.newArrivals,
-                  onTap: () {},
+                  onTap: () {
+                    context.push(
+                      '/custom_section',
+                      extra: CustomSectionType.newArrivals,
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -65,7 +71,12 @@ class HomeView extends StatelessWidget {
                 padding: padding,
                 child: CustomHeader(
                   title: context.l10n.bestSellers,
-                  onTap: () {},
+                  onTap: () {
+                    context.push(
+                      '/custom_section',
+                      extra: CustomSectionType.bestSellers,
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -75,7 +86,15 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 24),
               Padding(
                 padding: padding,
-                child: CustomHeader(title: context.l10n.onSale, onTap: () {}),
+                child: CustomHeader(
+                  title: context.l10n.onSale,
+                  onTap: () {
+                    context.push(
+                      '/custom_section',
+                      extra: CustomSectionType.onSale,
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 10),
               OnSaleSection(

@@ -1,64 +1,85 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
+import 'package:stylish_app/core/network/image_placeholder.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
+import 'package:stylish_app/core/widgets/product_bone.dart';
+import 'package:stylish_app/features/home/presentation/widgets/price_widget.dart';
+import 'package:stylish_app/features/home/presentation/widgets/rating_widget.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
+  final ProductEntity product;
+  final double leftMargin;
+  final double rightMargin;
+  final Function(String) onProductTap;
+
   const ProductCard({
     super.key,
     required this.product,
-    this.onTap,
-    this.onProductTap,
-    this.onFavoriteTap,
+    required this.leftMargin,
+    required this.rightMargin,
+    required this.onProductTap,
   });
-
-  final ProductEntity product;
-  final VoidCallback? onTap;
-  final ValueChanged<ProductEntity>? onProductTap;
-  final VoidCallback? onFavoriteTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onTap?.call();
-        onProductTap?.call(product);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
+    return Padding(
+      padding: EdgeInsets.only(left: leftMargin, right: rightMargin),
+      child: Stack(
         children: [
-          // Image and fav btn
-          _ImageWithFavBtn(product: product, onFavoriteTap: onFavoriteTap),
+          GestureDetector(
+            onTap: () => onProductTap(product.id),
+            child: SizedBox(
+              width: 180,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: SizedBox(
+                      height: 180,
+                      width: 180,
+                      child: ImagePlaceholder.cardImageUrl(product) == null
+                          ? const ProductBone()
+                          : CachedNetworkImage(
+                              imageUrl: ImagePlaceholder.cardImageUrl(product)!,
+                              fit: BoxFit.cover,
+                              placeholder: (_, _) => const ImagePlaceholder(),
+                              errorWidget: (_, _, _) =>
+                                  const ImagePlaceholder(),
+                            ),
+                    ),
+                  ),
 
-          const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-          // Title
-          Text(
-            product.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.textStyle.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onSurface,
+                  _ProductInfo(product: product),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 8),
 
-          // Price & Rating Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '\$${product.price.toStringAsFixed(2)}',
-                style: context.textStyle.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+          Positioned(
+            top: 10,
+            right: 10,
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: context.isDarkMode
+                      ? AppColors.grey2.withAlpha(200)
+                      : AppColors.white.withAlpha(220),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.favorite_border_rounded,
+                  size: 18,
                   color: context.colors.onSurface,
                 ),
               ),
-              // rating widget
-              _RatingWidget(product: product),
-            ],
+            ),
           ),
         ],
       ),
@@ -66,74 +87,41 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class _RatingWidget extends StatelessWidget {
-  const _RatingWidget({required this.product});
+class _ProductInfo extends StatelessWidget {
+  const _ProductInfo({required this.product});
 
   final ProductEntity product;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(Icons.star_rounded, size: 16, color: Color(0xFFFFC107)),
-        const SizedBox(width: 4),
         Text(
-          product.averageRating.toStringAsFixed(1),
-          style: context.textStyle.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: context.colors.onSurface,
-          ),
+          product.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: context.textStyle.titleMedium,
         ),
-      ],
-    );
-  }
-}
 
-class _ImageWithFavBtn extends StatelessWidget {
-  const _ImageWithFavBtn({required this.product, required this.onFavoriteTap});
+        const SizedBox(height: 8),
 
-  final ProductEntity product;
-  final VoidCallback? onFavoriteTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 250),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                product.images.first,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            ),
-          ),
+        Row(
+          children: [
+            if (product.discountPercentage != null &&
+                product.discountPercentage! > 0) ...[
+              PriceWidget(price: product.price, isOldPrice: true),
+              const SizedBox(width: 4),
+              PriceWidget(price: product.finalPrice, isNewPrice: true),
+            ] else ...[
+              PriceWidget(price: product.price),
+            ],
+          ],
         ),
-        Positioned(
-          top: 10,
-          right: 10,
-          child: GestureDetector(
-            onTap: onFavoriteTap,
-            child: Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: context.isDarkMode
-                    ? AppColors.grey2.withAlpha(200)
-                    : AppColors.white.withAlpha(220),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.favorite_border_rounded,
-                size: 18,
-                color: context.colors.onSurface,
-              ),
-            ),
-          ),
-        ),
+
+        const SizedBox(height: 8),
+
+        RatingWidget(product: product),
       ],
     );
   }

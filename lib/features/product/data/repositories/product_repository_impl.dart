@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:stylish_app/core/error/failure.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
+import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/domain/repositories/product_repository.dart';
 
@@ -19,40 +21,68 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, List<ProductEntity>>> getNewArrivalsProducts({
+  Future<Either<Failure, PaginatedResult<ProductEntity>>>
+  getNewArrivalsProducts({
     int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
   }) async {
     try {
-      final products = await productDataSource.getNewArrivalsProducts(
+      final result = await productDataSource.getNewArrivalsProducts(
         limit: limit,
+        lastDocument: lastDocument,
       );
-      return Right(List<ProductEntity>.from(products));
+      return Right(
+        PaginatedResult(
+          items: List<ProductEntity>.from(result.items),
+          lastDocument: result.lastDocument,
+          hasMore: result.hasMore,
+        ),
+      );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<ProductEntity>>> getBestSellersProducts({
+  Future<Either<Failure, PaginatedResult<ProductEntity>>>
+  getBestSellersProducts({
     int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
   }) async {
     try {
-      final products = await productDataSource.getBestSellersProducts(
+      final result = await productDataSource.getBestSellersProducts(
         limit: limit,
+        lastDocument: lastDocument,
       );
-      return Right(List<ProductEntity>.from(products));
+      return Right(
+        PaginatedResult(
+          items: List<ProductEntity>.from(result.items),
+          lastDocument: result.lastDocument,
+          hasMore: result.hasMore,
+        ),
+      );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<ProductEntity>>> getOnSaleProducts({
+  Future<Either<Failure, PaginatedResult<ProductEntity>>> getOnSaleProducts({
     int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
   }) async {
     try {
-      final products = await productDataSource.getOnSaleProducts(limit: limit);
-      return Right(List<ProductEntity>.from(products));
+      final result = await productDataSource.getOnSaleProducts(
+        limit: limit,
+        lastDocument: lastDocument,
+      );
+      return Right(
+        PaginatedResult(
+          items: List<ProductEntity>.from(result.items),
+          lastDocument: result.lastDocument,
+          hasMore: result.hasMore,
+        ),
+      );
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
     }
