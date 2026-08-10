@@ -1,11 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/theme/app_colors.dart';
-import 'package:stylish_app/features/onboarding/view_model/splash_cubit/splash_cubit.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -46,7 +44,7 @@ class _SplashViewState extends State<SplashView>
         if (mounted) setState(() => _showText = true);
         Future.delayed(const Duration(milliseconds: 2000), () {
           if (!mounted) return;
-          context.read<SplashCubit>().checkAppRouting();
+          context.go('/layout');
         });
       });
     });
@@ -60,52 +58,40 @@ class _SplashViewState extends State<SplashView>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SplashCubit, SplashState>(
-      listener: (context, state) {
-        if (state is SplashNavigateToOnboarding) {
-          context.go('/onboarding');
-        } else if (state is SplashNavigateToAuth) {
-          context.go('/login');
-        } else if (state is SplashNavigateToHome) {
-          // context.go('/home');
-          context.go('/layout');
-        }
-      },
-      child: Scaffold(
-        backgroundColor: context.colors.surfaceContainer,
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(alignment: Alignment.topCenter, child: _WaveLines()),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SlideTransition(
-                      position: _posAnim,
-                      child: AnimatedBuilder(
-                        animation: _sizeAnim,
-                        builder: (context, child) =>
-                            _LogoWidget(sizeAnim: _sizeAnim),
-                      ),
+    return Scaffold(
+      backgroundColor: context.colors.surfaceContainer,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(alignment: Alignment.topCenter, child: _WaveLines()),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SlideTransition(
+                    position: _posAnim,
+                    child: AnimatedBuilder(
+                      animation: _sizeAnim,
+                      builder: (context, child) =>
+                          _LogoWidget(sizeAnim: _sizeAnim),
                     ),
-                    const SizedBox(width: 12),
+                  ),
+                  const SizedBox(width: 12),
 
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: _showText
-                          ? _AnimatedAppNameText()
-                          : const SizedBox(key: ValueKey('empty')),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: _showText
+                        ? _AnimatedAppNameText()
+                        : const SizedBox(key: ValueKey('empty')),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

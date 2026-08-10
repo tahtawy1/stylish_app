@@ -145,4 +145,19 @@ class AuthDataSourceImpl implements AuthDataSource {
       throw ServerException(message: e.toString());
     }
   }
+
+  @override
+  bool get isAuthenticated => auth.currentUser != null;
+
+  @override
+  User? get currentUser => auth.currentUser;
+
+  @override
+  Future<void> logOut() async {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
 }

@@ -123,4 +123,33 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<PaginatedResult<ProductModel>> getProductsByCategory({
+    required String categoryId,
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  }) async {
+    try {
+      final res = firestore
+          .collection('products')
+          .where('isAvailable', isEqualTo: true)
+          .where('categoryId', isEqualTo: categoryId)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
+      final result = lastDocument != null
+          ? await res.startAfterDocument(lastDocument).get()
+          : await res.get();
+      final products = result.docs
+          .map((e) => ProductModel.fromJson(e.data()))
+          .toList();
+      return PaginatedResult(
+        items: products,
+        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
+        hasMore: result.docs.length == limit,
+      );
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

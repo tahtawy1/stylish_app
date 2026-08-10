@@ -27,4 +27,10 @@ abstract class ProductRepository {
   // get product by id
   Future<Either<Failure, ProductEntity>> getProductById({required String id});
   // get products by category
+  Future<Either<Failure, PaginatedResult<ProductEntity>>>
+  getProductsByCategory({
+    required String categoryId,
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  });
 }

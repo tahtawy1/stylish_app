@@ -1,55 +1,79 @@
 import 'dart:developer';
-
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stylish_app/features/category/domain/use_cases/get_category_by_id_use_case.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
+import 'package:stylish_app/features/product/domain/use_cases/get_products_by_category_use_case.dart';
 
-part 'custom_section_state.dart';
+part 'product_listing_state.dart';
 
-enum CustomSectionType {
+enum ProductListingType {
   newArrivals,
   onSale,
-  bestSellers;
+  bestSellers,
+  category;
 
   String get title {
     switch (this) {
-      case CustomSectionType.newArrivals:
+      case ProductListingType.newArrivals:
         return 'New Arrivals';
-      case CustomSectionType.onSale:
+      case ProductListingType.onSale:
         return 'On Sale';
-      case CustomSectionType.bestSellers:
+      case ProductListingType.bestSellers:
         return 'Best Sellers';
+      case ProductListingType.category:
+        return 'Category';
     }
   }
 }
 
-class CustomSectionCubit extends Cubit<CustomSectionState> {
-  CustomSectionCubit({
+class ProductListingCubit extends Cubit<ProductListingState> {
+  ProductListingCubit({
     required this.getNewArrivalsProductsUseCase,
     required this.getBestSellersProductsUseCase,
     required this.getOnSaleProductsUseCase,
-  }) : super(const CustomSectionState());
+    required this.getProductsByCategoryUseCase,
+    required this.getCategoryByIdUseCase,
+  }) : super(const ProductListingState());
 
   final GetNewArrivalsProductsUseCase getNewArrivalsProductsUseCase;
   final GetBestSellersProductsUseCase getBestSellersProductsUseCase;
   final GetOnSaleProductsUseCase getOnSaleProductsUseCase;
+  final GetProductsByCategoryUseCase getProductsByCategoryUseCase;
+  final GetCategoryByIdUseCase getCategoryByIdUseCase;
 
-  Future<void> load({required CustomSectionType type, int limit = 20}) async {
+  Future<void> load({
+    required ProductListingType type,
+    int limit = 20,
+    String? categoryId,
+  }) async {
     emit(
       state.copyWith(
-        status: CustomSectionStatus.loading,
+        status: ProductListingStatus.loading,
         type: type,
+        categoryId: categoryId,
+        categoryName: null,
         products: [],
         lastDocument: null,
         hasMore: true,
         errorMessage: null,
       ),
     );
+
+    if (type == ProductListingType.category && categoryId != null) {
+      final categoryResult = await getCategoryByIdUseCase.call(id: categoryId);
+      categoryResult.fold(
+        (failure) {},
+        (category) {
+          if (!isClosed) {
+            emit(state.copyWith(categoryName: category.name));
+          }
+        },
+      );
+    }
 
     final result = await _getProducts(type: type, limit: limit);
 
@@ -59,7 +83,7 @@ class CustomSectionCubit extends Cubit<CustomSectionState> {
       (failure) {
         emit(
           state.copyWith(
-            status: CustomSectionStatus.failure,
+            status: ProductListingStatus.failure,
             errorMessage: failure.message,
           ),
         );
@@ -67,7 +91,7 @@ class CustomSectionCubit extends Cubit<CustomSectionState> {
       (data) {
         emit(
           state.copyWith(
-            status: CustomSectionStatus.success,
+            status: ProductListingStatus.success,
             products: data.items,
             lastDocument: data.lastDocument,
             hasMore: data.hasMore,
@@ -79,7 +103,7 @@ class CustomSectionCubit extends Cubit<CustomSectionState> {
   }
 
   Future<void> loadMore({int limit = 20}) async {
-    if (state.status == CustomSectionStatus.loading) return;
+    if (state.status == ProductListingStatus.loading) return;
     if (state.isLoadingMore) return;
     if (!state.hasMore) return;
     if (state.type == null) return;
@@ -121,25 +145,31 @@ class CustomSectionCubit extends Cubit<CustomSectionState> {
   }
 
   Future _getProducts({
-    required CustomSectionType type,
+    required ProductListingType type,
     required int limit,
     dynamic lastDocument,
   }) {
     switch (type) {
-      case CustomSectionType.newArrivals:
+      case ProductListingType.newArrivals:
         return getNewArrivalsProductsUseCase.call(
           limit: limit,
           lastDocument: lastDocument,
         );
 
-      case CustomSectionType.bestSellers:
+      case ProductListingType.bestSellers:
         return getBestSellersProductsUseCase.call(
           limit: limit,
           lastDocument: lastDocument,
         );
 
-      case CustomSectionType.onSale:
+      case ProductListingType.onSale:
         return getOnSaleProductsUseCase.call(
+          limit: limit,
+          lastDocument: lastDocument,
+        );
+      case ProductListingType.category:
+        return getProductsByCategoryUseCase.call(
+          categoryId: state.categoryId!,
           limit: limit,
           lastDocument: lastDocument,
         );
