@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
-import 'package:stylish_app/features/home/presentation/widgets/product_card.dart';
+import 'package:stylish_app/features/product/presentation/widgets/product_card.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 
 class NewArrivalsSection extends StatelessWidget {
   final Function(String) onProductTap;
+  final VoidCallback onFavTap;
 
-  const NewArrivalsSection({super.key, required this.onProductTap});
+  const NewArrivalsSection({
+    super.key,
+    required this.onProductTap,
+    required this.onFavTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,7 @@ class NewArrivalsSection extends StatelessWidget {
                 leftMargin: index == 0 ? 20 : 8,
                 rightMargin: index == products.length - 1 ? 20 : 8,
                 onProductTap: onProductTap,
+                onFavTap: onFavTap,
               ),
             ),
           ),

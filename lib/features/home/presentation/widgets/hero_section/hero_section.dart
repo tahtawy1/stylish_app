@@ -140,7 +140,6 @@ class HeroBone extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.grey10.withValues(alpha: .5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.colors.outline.withValues(alpha: .5)),
       ),
       child: Stack(
         children: [

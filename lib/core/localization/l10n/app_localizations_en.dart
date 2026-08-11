@@ -216,4 +216,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get priceLabel => 'Price';
+
+  @override
+  String get noCategories => 'No Categories';
+
+  @override
+  String get noProducts => 'No Products';
 }

@@ -20,4 +20,16 @@ class CategoryRepositoryImpl implements CategoryRepository {
       return left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, CategoryEntity>> getCategoryById({
+    required String id,
+  }) async {
+    try {
+      final result = await remoteDataSource.getCategoryById(id: id);
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
 }

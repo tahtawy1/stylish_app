@@ -99,4 +99,29 @@ class ProductRepositoryImpl implements ProductRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, PaginatedResult<ProductEntity>>>
+  getProductsByCategory({
+    required String categoryId,
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  }) async {
+    try {
+      final result = await productDataSource.getProductsByCategory(
+        categoryId: categoryId,
+        limit: limit,
+        lastDocument: lastDocument,
+      );
+      return Right(
+        PaginatedResult(
+          items: List<ProductEntity>.from(result.items),
+          lastDocument: result.lastDocument,
+          hasMore: result.hasMore,
+        ),
+      );
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

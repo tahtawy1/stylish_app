@@ -22,5 +22,9 @@ abstract class ProductRemoteDataSource {
   });
   // get product by id
   Future<ProductModel> getProductById({required String id});
-  // get products by category
+  Future<PaginatedResult<ProductModel>> getProductsByCategory({
+    required String categoryId,
+    int limit,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+  });
 }

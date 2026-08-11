@@ -13,6 +13,7 @@ class ProductCard extends StatelessWidget {
   final double leftMargin;
   final double rightMargin;
   final Function(String) onProductTap;
+  final VoidCallback onFavTap;
 
   const ProductCard({
     super.key,
@@ -20,6 +21,7 @@ class ProductCard extends StatelessWidget {
     required this.leftMargin,
     required this.rightMargin,
     required this.onProductTap,
+    required this.onFavTap,
   });
 
   @override
@@ -64,7 +66,7 @@ class ProductCard extends StatelessWidget {
             top: 10,
             right: 10,
             child: GestureDetector(
-              onTap: () {},
+              onTap: onFavTap,
               child: Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(

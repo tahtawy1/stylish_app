@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stylish_app/core/error/failure.dart';
 import 'package:stylish_app/features/auth/data/models/user_model.dart';
 
@@ -19,4 +20,7 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> signWithGoogle();
   Future<Either<Failure, void>> signWithFacebook();
   Future<Either<Failure, String>> getUserName();
+  Either<Failure, User?> get currentUser;
+  Either<Failure, bool> get isAuthenticated;
+  Future<Either<Failure, void>> logOut();
 }

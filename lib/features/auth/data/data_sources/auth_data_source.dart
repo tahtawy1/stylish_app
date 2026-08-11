@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:stylish_app/features/auth/data/models/user_model.dart';
 
 abstract class AuthDataSource {
@@ -14,4 +15,8 @@ abstract class AuthDataSource {
   Future<void> signWithGoogle();
   Future<void> signWithFacebook();
   Future<String> getUserName();
+
+  User? get currentUser;
+  bool get isAuthenticated;
+  Future<void> logOut();
 }

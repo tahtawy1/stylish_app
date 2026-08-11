@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
+import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/login/login_forgot_password_row.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/login/login_form.dart';
@@ -57,6 +58,11 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CircularIconButton(
+                  icon: Icons.arrow_back_ios,
+                  onTap: () => context.pop(),
+                ),
+                const SizedBox(height: 16),
                 AuthHeader(
                   title: l10n.loginTitle,
                   subtitle: l10n.loginSubtitle,
