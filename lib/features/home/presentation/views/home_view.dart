@@ -12,7 +12,6 @@ import 'package:stylish_app/features/home/presentation/widgets/greeting_section.
 import 'package:stylish_app/features/home/presentation/widgets/hero_section/hero_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/new_arrivals_section/new_arrivals_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/on_sale_section/on_sale_section.dart';
-import 'package:stylish_app/features/home/presentation/widgets/search_section/search_section.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 
 class HomeView extends StatelessWidget {
@@ -34,9 +33,7 @@ class HomeView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(padding: padding, child: GreetingSection()),
-              const SizedBox(height: 20),
-              const Padding(padding: padding, child: SearchSection()),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               const HeroSection(),
               const SizedBox(height: 20),
               Padding(
@@ -50,9 +47,13 @@ class HomeView extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               CategoriesSection(
-                onCategoryTap: (id) => context.push(
+                onCategoryTap: (id, name) => context.push(
                   '/product_listing',
-                  extra: {'type': ProductListingType.category, 'id': id},
+                  extra: {
+                    'type': ProductListingType.category,
+                    'id': id,
+                    'name': name,
+                  },
                 ),
               ),
               const SizedBox(height: 24),
@@ -63,7 +64,10 @@ class HomeView extends StatelessWidget {
                   onTap: () {
                     context.push(
                       '/product_listing',
-                      extra: {'type': ProductListingType.newArrivals},
+                      extra: {
+                        'type': ProductListingType.newArrivals,
+                        'name': ProductListingType.newArrivals.title,
+                      },
                     );
                   },
                 ),
@@ -88,7 +92,10 @@ class HomeView extends StatelessWidget {
                   onTap: () {
                     context.push(
                       '/product_listing',
-                      extra: {'type': ProductListingType.bestSellers},
+                      extra: {
+                        'type': ProductListingType.bestSellers,
+                        'name': ProductListingType.bestSellers.title,
+                      },
                     );
                   },
                 ),
@@ -113,7 +120,10 @@ class HomeView extends StatelessWidget {
                   onTap: () {
                     context.push(
                       '/product_listing',
-                      extra: {'type': ProductListingType.onSale},
+                      extra: {
+                        'type': ProductListingType.onSale,
+                        'name': ProductListingType.onSale.title,
+                      },
                     );
                   },
                 ),

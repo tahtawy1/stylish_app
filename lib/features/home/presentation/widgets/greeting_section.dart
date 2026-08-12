@@ -22,7 +22,7 @@ class GreetingSection extends StatelessWidget {
           children: [
             Text(
               getGreeting(context),
-              style: context.textStyle.bodySmall?.copyWith(
+              style: context.textStyle.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
@@ -31,8 +31,7 @@ class GreetingSection extends StatelessWidget {
               builder: (context, state) {
                 return Text(
                   state.user?.displayName ?? 'Guest',
-                  style: context.textStyle.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  style: context.textStyle.headlineLarge?.copyWith(
                     color: context.colors.onSurface,
                   ),
                 );

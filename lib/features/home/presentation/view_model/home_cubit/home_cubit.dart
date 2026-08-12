@@ -31,6 +31,9 @@ class HomeCubit extends Cubit<HomeState> {
   final GetBestSellersProductsUseCase getBestSellersProductsUseCase;
   final GetOnSaleProductsUseCase getOnSaleProductsUseCase;
   Future<void> loadHome() async {
+    if (isClosed) {
+      return;
+    }
     emit(state.copyWith(status: HomeStatus.loading));
 
     final results = await Future.wait<Either<Failure, dynamic>>([

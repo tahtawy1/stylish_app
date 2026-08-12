@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_app/features/category/domain/use_cases/get_category_by_id_use_case.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
+import 'package:stylish_app/features/product/domain/entities/product_filter_model.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
@@ -65,14 +66,11 @@ class ProductListingCubit extends Cubit<ProductListingState> {
 
     if (type == ProductListingType.category && categoryId != null) {
       final categoryResult = await getCategoryByIdUseCase.call(id: categoryId);
-      categoryResult.fold(
-        (failure) {},
-        (category) {
-          if (!isClosed) {
-            emit(state.copyWith(categoryName: category.name));
-          }
-        },
-      );
+      categoryResult.fold((failure) {}, (category) {
+        if (!isClosed) {
+          emit(state.copyWith(categoryName: category.name));
+        }
+      });
     }
 
     final result = await _getProducts(type: type, limit: limit);
@@ -126,6 +124,8 @@ class ProductListingCubit extends Cubit<ProductListingState> {
 
     result.fold(
       (failure) {
+        log('❌ LOAD MORE FAILED: ${failure.message}');
+
         emit(
           state.copyWith(isLoadingMore: false, errorMessage: failure.message),
         );
@@ -139,7 +139,45 @@ class ProductListingCubit extends Cubit<ProductListingState> {
             isLoadingMore: false,
           ),
         );
-        log('data after loading ${data.items.length}');
+      },
+    );
+  }
+
+  Future<void> applyFilter(ProductFilterModel? filter) async {
+    emit(
+      state.copyWith(
+        activeFilter: filter,
+        products: [],
+        lastDocument: null,
+        hasMore: true,
+        status: ProductListingStatus.loading,
+      ),
+    );
+
+    if (state.type == null) return;
+
+    final result = await _getProducts(type: state.type!, limit: 20);
+
+    if (isClosed) return;
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: ProductListingStatus.failure,
+            errorMessage: failure.message,
+          ),
+        );
+      },
+      (data) {
+        emit(
+          state.copyWith(
+            status: ProductListingStatus.success,
+            products: data.items,
+            lastDocument: data.lastDocument,
+            hasMore: data.hasMore,
+          ),
+        );
       },
     );
   }
@@ -154,24 +192,28 @@ class ProductListingCubit extends Cubit<ProductListingState> {
         return getNewArrivalsProductsUseCase.call(
           limit: limit,
           lastDocument: lastDocument,
+          filter: state.activeFilter,
         );
 
       case ProductListingType.bestSellers:
         return getBestSellersProductsUseCase.call(
           limit: limit,
           lastDocument: lastDocument,
+          filter: state.activeFilter,
         );
 
       case ProductListingType.onSale:
         return getOnSaleProductsUseCase.call(
           limit: limit,
           lastDocument: lastDocument,
+          filter: state.activeFilter,
         );
       case ProductListingType.category:
         return getProductsByCategoryUseCase.call(
           categoryId: state.categoryId!,
           limit: limit,
           lastDocument: lastDocument,
+          filter: state.activeFilter,
         );
     }
   }

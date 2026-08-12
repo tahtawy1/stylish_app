@@ -12,7 +12,7 @@ import 'package:stylish_app/features/home/presentation/view_model/home_cubit/hom
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key, required this.onCategoryTap});
 
-  final Function(String) onCategoryTap;
+  final Function(String, String) onCategoryTap;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
@@ -61,7 +61,7 @@ class CategoryBone extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: AppColors.grey10.withValues(alpha: .5),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: CategoryInfo(categoryName: category.name, wantGradient: false),
     );

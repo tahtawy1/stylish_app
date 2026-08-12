@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/network/image_placeholder.dart';
 
 class ProductBone extends StatelessWidget {
@@ -9,7 +8,7 @@ class ProductBone extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: const ImagePlaceholder(),
     );
   }

@@ -77,9 +77,10 @@ class AppRouter {
           final extra = state.extra as Map<String, dynamic>;
           final type = extra['type'] as ProductListingType;
           final id = extra['id'] as String?;
+          final name = extra['name'] as String;
           return BlocProvider(
             create: (context) => getIt<ProductListingCubit>(),
-            child: ProductListingView(type: type, id: id),
+            child: ProductListingView(type: type, id: id, name: name),
           );
         },
       ),

@@ -54,9 +54,13 @@ class CategoriesView extends StatelessWidget {
                     category: isLoading
                         ? CategoryEntity.fake()
                         : categories[index],
-                    onCategoryTap: (id) => context.push(
+                    onCategoryTap: (id, name) => context.push(
                       '/product_listing',
-                      extra: {'type': ProductListingType.category, 'id': id},
+                      extra: {
+                        'type': ProductListingType.category,
+                        'id': id,
+                        'name': name,
+                      },
                     ),
                   );
                 },
@@ -77,14 +81,14 @@ class CategoryCard extends StatelessWidget {
   });
 
   final CategoryEntity category;
-  final Function(String) onCategoryTap;
+  final Function(String, String) onCategoryTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onCategoryTap(category.id),
+      onTap: () => onCategoryTap(category.id, category.name),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: category.imageUrl.isEmpty
             ? CategoryBone(category: category)
             : CachedNetworkImage(

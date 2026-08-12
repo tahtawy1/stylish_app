@@ -12,6 +12,7 @@ class ProductListingState {
   final DocumentSnapshot<Map<String, dynamic>>? lastDocument;
   final bool isLoadingMore;
   final String? errorMessage;
+  final ProductFilterModel? activeFilter;
 
   const ProductListingState({
     this.status = ProductListingStatus.initial,
@@ -23,6 +24,7 @@ class ProductListingState {
     this.lastDocument,
     this.isLoadingMore = false,
     this.errorMessage,
+    this.activeFilter,
   });
 
   ProductListingState copyWith({
@@ -35,6 +37,7 @@ class ProductListingState {
     DocumentSnapshot<Map<String, dynamic>>? lastDocument,
     bool? isLoadingMore,
     String? errorMessage,
+    Object? activeFilter = _unset,
   }) {
     return ProductListingState(
       status: status ?? this.status,
@@ -46,6 +49,12 @@ class ProductListingState {
       lastDocument: lastDocument ?? this.lastDocument,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       errorMessage: errorMessage ?? this.errorMessage,
+      activeFilter: identical(activeFilter, _unset)
+          ? this.activeFilter
+          : activeFilter as ProductFilterModel?,
     );
   }
 }
+
+const _unset = Object();
+

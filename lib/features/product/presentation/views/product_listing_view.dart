@@ -8,10 +8,17 @@ import 'package:stylish_app/core/utils/auth_guard.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/widgets/product_card.dart';
+import 'package:stylish_app/features/product/presentation/widgets/product_filter_sheet.dart';
 
 class ProductListingView extends StatefulWidget {
-  const ProductListingView({super.key, required this.type, this.id});
+  const ProductListingView({
+    super.key,
+    required this.type,
+    this.id,
+    required this.name,
+  });
 
+  final String name;
   final ProductListingType type;
   final String? id;
   @override
@@ -60,17 +67,8 @@ class _ProductListingViewState extends State<ProductListingView> {
             final isLoading =
                 state.status == ProductListingStatus.loading ||
                 state.status == ProductListingStatus.initial;
-            final title =
-                (widget.type == ProductListingType.category &&
-                    state.categoryName != null)
-                ? state.categoryName!
-                : isLoading
-                ? 'Load...'
-                : widget.type.title;
-            return Skeletonizer(
-              enabled: isLoading,
-              child: Text(title, style: context.textStyle.titleLarge),
-            );
+
+            return Text(widget.name, style: context.textStyle.titleLarge);
           },
         ),
         centerTitle: true,
@@ -79,14 +77,46 @@ class _ProductListingViewState extends State<ProductListingView> {
           onPressed: () => context.pop(),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<ProductListingCubit>().load(
-                type: widget.type,
-                categoryId: widget.id,
+          BlocBuilder<ProductListingCubit, ProductListingState>(
+            builder: (context, state) {
+              final hasActiveFilter =
+                  state.activeFilter?.hasActiveFilter ?? false;
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        final filter = await ProductFilterSheet.show(
+                          context,
+                          initialFilter: state.activeFilter,
+                        );
+                        if (filter != null && context.mounted) {
+                          context.read<ProductListingCubit>().applyFilter(
+                            filter.hasActiveFilter ? filter : null,
+                          );
+                        }
+                      },
+                      icon: Icon(Icons.tune, color: context.colors.primary),
+                    ),
+                    if (hasActiveFilter)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: context.colors.error,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               );
             },
-            icon: const Icon(Icons.refresh),
           ),
         ],
       ),

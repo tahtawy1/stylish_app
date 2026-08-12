@@ -17,7 +17,7 @@ enum LoginRequiredAction {
       case LoginRequiredAction.checkout:
         return 'Sign in to complete your order and make your purchase.';
 
-      case LoginRequiredAction.orders:
+      case LoginRequiredAction.orders: // todo pass them to localization
         return 'Sign in to view your orders and keep track of your purchases.';
 
       case LoginRequiredAction.reviews:
