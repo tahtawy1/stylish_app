@@ -4,20 +4,28 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
-import 'package:stylish_app/features/home/presentation/widgets/product_card.dart';
+import 'package:stylish_app/core/utils/auth_guard.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
-import 'package:stylish_app/features/product/presentation/view_model/custom_section/custom_section_cubit.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
+import 'package:stylish_app/features/product/presentation/widgets/product_card.dart';
+import 'package:stylish_app/features/product/presentation/widgets/product_filter_sheet.dart';
 
-class CustomSectionView extends StatefulWidget {
-  const CustomSectionView({super.key, required this.sectionType});
+class ProductListingView extends StatefulWidget {
+  const ProductListingView({
+    super.key,
+    required this.type,
+    this.id,
+    required this.name,
+  });
 
-  final CustomSectionType sectionType;
-
+  final String name;
+  final ProductListingType type;
+  final String? id;
   @override
-  State<CustomSectionView> createState() => _CustomSectionViewState();
+  State<ProductListingView> createState() => _ProductListingViewState();
 }
 
-class _CustomSectionViewState extends State<CustomSectionView> {
+class _ProductListingViewState extends State<ProductListingView> {
   late ScrollController _scrollController;
 
   @override
@@ -27,7 +35,10 @@ class _CustomSectionViewState extends State<CustomSectionView> {
     _scrollController = ScrollController()..addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CustomSectionCubit>().load(type: widget.sectionType);
+      context.read<ProductListingCubit>().load(
+        type: widget.type,
+        categoryId: widget.id,
+      );
     });
   }
 
@@ -37,7 +48,7 @@ class _CustomSectionViewState extends State<CustomSectionView> {
     final position = _scrollController.position;
 
     if (position.pixels >= position.maxScrollExtent - 500) {
-      context.read<CustomSectionCubit>().loadMore();
+      context.read<ProductListingCubit>().loadMore();
     }
   }
 
@@ -51,9 +62,14 @@ class _CustomSectionViewState extends State<CustomSectionView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.sectionType.title,
-          style: context.textStyle.titleLarge,
+        title: BlocBuilder<ProductListingCubit, ProductListingState>(
+          builder: (context, state) {
+            final isLoading =
+                state.status == ProductListingStatus.loading ||
+                state.status == ProductListingStatus.initial;
+
+            return Text(widget.name, style: context.textStyle.titleLarge);
+          },
         ),
         centerTitle: true,
         leading: IconButton(
@@ -61,24 +77,59 @@ class _CustomSectionViewState extends State<CustomSectionView> {
           onPressed: () => context.pop(),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<CustomSectionCubit>().load(type: widget.sectionType);
+          BlocBuilder<ProductListingCubit, ProductListingState>(
+            builder: (context, state) {
+              final hasActiveFilter =
+                  state.activeFilter?.hasActiveFilter ?? false;
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        final filter = await ProductFilterSheet.show(
+                          context,
+                          initialFilter: state.activeFilter,
+                        );
+                        if (filter != null && context.mounted) {
+                          context.read<ProductListingCubit>().applyFilter(
+                            filter.hasActiveFilter ? filter : null,
+                          );
+                        }
+                      },
+                      icon: Icon(Icons.tune, color: context.colors.primary),
+                    ),
+                    if (hasActiveFilter)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: context.colors.error,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
             },
-            icon: const Icon(Icons.refresh),
           ),
         ],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: BlocBuilder<CustomSectionCubit, CustomSectionState>(
+          child: BlocBuilder<ProductListingCubit, ProductListingState>(
             builder: (context, state) {
               final isLoading =
-                  state.status == CustomSectionStatus.loading ||
-                  state.status == CustomSectionStatus.initial;
+                  state.status == ProductListingStatus.loading ||
+                  state.status == ProductListingStatus.initial;
 
-              final isFailure = state.status == CustomSectionStatus.failure;
+              final isFailure = state.status == ProductListingStatus.failure;
               final products = isLoading
                   ? List.generate(6, (_) => ProductEntity.fake())
                   : state.products ?? [];
@@ -87,33 +138,19 @@ class _CustomSectionViewState extends State<CustomSectionView> {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          state.errorMessage ?? 'Something went wrong',
-                          style: context.textStyle.bodyLarge,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.read<CustomSectionCubit>().load(
-                              type: widget.sectionType,
-                            );
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
+                    child: Text(
+                      state.errorMessage ?? 'Something went wrong',
+                      style: context.textStyle.bodyLarge,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 );
-              }
+              } // todo: Fetch products
 
               if (!isLoading && products.isEmpty) {
                 return Center(
                   child: Text(
-                    'No Products',
+                    context.l10n.noProducts,
                     style: context.textStyle.bodyLarge,
                   ),
                 );
@@ -121,8 +158,8 @@ class _CustomSectionViewState extends State<CustomSectionView> {
 
               return RefreshIndicator(
                 onRefresh: () async {
-                  await context.read<CustomSectionCubit>().load(
-                    type: widget.sectionType,
+                  await context.read<ProductListingCubit>().load(
+                    type: widget.type,
                   );
                 },
                 child: Skeletonizer(
@@ -153,6 +190,14 @@ class _CustomSectionViewState extends State<CustomSectionView> {
                               },
                               leftMargin: 0,
                               rightMargin: 0,
+                              onFavTap: () {
+                                final isAuthenticated = AuthGuard.requireAuth(
+                                  context,
+                                  action: LoginRequiredAction.favorites,
+                                );
+                                if (!isAuthenticated) return;
+                                //TODO add favorite logic
+                              },
                             );
                           },
                         ),
@@ -161,8 +206,8 @@ class _CustomSectionViewState extends State<CustomSectionView> {
                             padding: EdgeInsets.symmetric(vertical: 24),
                             child: Center(
                               child: SizedBox(
-                                height: 45,
-                                width: 45,
+                                height: 25,
+                                width: 25,
                                 child: CircularProgressIndicator(),
                               ),
                             ),

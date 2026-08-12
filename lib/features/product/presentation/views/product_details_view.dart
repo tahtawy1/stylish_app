@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
+import 'package:stylish_app/core/utils/auth_guard.dart';
+import 'package:stylish_app/features/auth/domain/use_cases/is_authenticated_use_case.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/product/presentation/widgets/product_bottom_bar.dart';
@@ -58,7 +60,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   ? state.images!
                                   : productBone.images),
                         isFavorite: widget.isFavorite,
-                        onFavoriteTap: () {},
+                        onFavoriteTap: () {
+                          final isAuthenticated = AuthGuard.requireAuth(
+                            context,
+                          );
+                          if (!isAuthenticated) return;
+                        },
                       ),
 
                       const SizedBox(height: 20),
@@ -68,7 +75,13 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         product: isLoading
                             ? productBone
                             : state.product ?? productBone,
-                        onReviewsTap: () {},
+                        onReviewsTap: () {
+                          final isAuthenticated = AuthGuard.requireAuth(
+                            context,
+                            action: LoginRequiredAction.reviews,
+                          );
+                          if (!isAuthenticated) return;
+                        },
                       ),
 
                       const SizedBox(height: 24),

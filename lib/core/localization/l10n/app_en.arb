@@ -66,5 +66,7 @@
     "addToCart": "Add to Cart",
     "reviews": "reviews",
     "readMore": "Read More. . .",
-    "priceLabel": "Price"
+    "priceLabel": "Price",
+    "noCategories": "No Categories",
+    "noProducts": "No Products"
 }

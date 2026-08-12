@@ -26,4 +26,18 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<CategoryModel> getCategoryById({required String id}) async {
+    try {
+      final snapshot = await firestore.collection('categories').doc(id).get();
+      if (snapshot.exists) {
+        return CategoryModel.fromJson(snapshot.data()!);
+      }
+      throw Exception('Category not found'); // todo : make it app exception
+    } catch (e) {
+      log(e.toString());
+      throw Exception(e.toString()); // todo : make it app exception
+    }
+  }
 }

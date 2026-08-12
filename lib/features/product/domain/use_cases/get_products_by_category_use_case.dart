@@ -6,17 +6,19 @@ import 'package:stylish_app/features/product/domain/entities/product_entity.dart
 import 'package:stylish_app/features/product/domain/entities/product_filter_model.dart';
 import 'package:stylish_app/features/product/domain/repositories/product_repository.dart';
 
-class GetNewArrivalsProductsUseCase {
+class GetProductsByCategoryUseCase {
   final ProductRepository productRepository;
 
-  GetNewArrivalsProductsUseCase({required this.productRepository});
+  GetProductsByCategoryUseCase({required this.productRepository});
 
   Future<Either<Failure, PaginatedResult<ProductEntity>>> call({
+    required String categoryId,
     int limit = 20,
     DocumentSnapshot<Map<String, dynamic>>? lastDocument,
     ProductFilterModel? filter,
-  }) async {
-    return await productRepository.getNewArrivalsProducts(
+  }) {
+    return productRepository.getProductsByCategory(
+      categoryId: categoryId,
       limit: limit,
       lastDocument: lastDocument,
       filter: filter,

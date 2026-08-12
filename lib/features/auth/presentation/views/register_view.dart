@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
+import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/register/register_form.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/register/register_terms_text.dart';
@@ -64,6 +65,11 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CircularIconButton(
+                  icon: Icons.arrow_back_ios,
+                  onTap: () => context.pop(),
+                ),
+                const SizedBox(height: 16),
                 AuthHeader(
                   title: l10n.registerTitle,
                   subtitle: l10n.registerSubtitle,
