@@ -222,4 +222,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noProducts => 'No Products';
+
+  @override
+  String get favorites => 'Favorites';
 }

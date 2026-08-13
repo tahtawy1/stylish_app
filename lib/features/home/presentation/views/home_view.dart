@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 import 'package:stylish_app/features/home/presentation/widgets/best_sellers_section/best_sellers_section.dart';
 import 'package:stylish_app/features/home/presentation/widgets/categories_section/categories_section.dart';
@@ -75,13 +78,23 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 10),
               NewArrivalsSection(
                 onProductTap: (productId) => _onProductTap(context, productId),
-                onFavTap: () {
+                onFavTap: (id) {
                   final isAuthenticated = AuthGuard.requireAuth(
                     context,
                     action: LoginRequiredAction.favorites,
                   );
                   if (!isAuthenticated) return;
-                  //TODO add favorite logic
+                  log('toggle favorite: $id');
+                  log(
+                    'is favorite ${context.read<FavoriteCubit>().isFavorite(id)}',
+                  );
+                  context.read<FavoriteCubit>().toggleFavorite(
+                    productId: id,
+                    isFavorite: context.read<FavoriteCubit>().isFavorite(id),
+                  );
+                  log(
+                    'after toggle is favorite ${context.read<FavoriteCubit>().isFavorite(id)}',
+                  );
                 },
               ),
               const SizedBox(height: 24),
@@ -103,13 +116,16 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 10),
               BestSellersSection(
                 onProductTap: (productId) => _onProductTap(context, productId),
-                onFavTap: () {
+                onFavTap: (id) {
                   final isAuthenticated = AuthGuard.requireAuth(
                     context,
                     action: LoginRequiredAction.favorites,
                   );
                   if (!isAuthenticated) return;
-                  //TODO add favorite logic
+                  context.read<FavoriteCubit>().toggleFavorite(
+                    productId: id,
+                    isFavorite: context.read<FavoriteCubit>().isFavorite(id),
+                  );
                 },
               ),
               const SizedBox(height: 24),
@@ -131,13 +147,16 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 10),
               OnSaleSection(
                 onProductTap: (productId) => _onProductTap(context, productId),
-                onFavTap: () {
+                onFavTap: (id) {
                   final isAuthenticated = AuthGuard.requireAuth(
                     context,
                     action: LoginRequiredAction.favorites,
                   );
                   if (!isAuthenticated) return;
-                  //TODO add favorite logic
+                  context.read<FavoriteCubit>().toggleFavorite(
+                    productId: id,
+                    isFavorite: context.read<FavoriteCubit>().isFavorite(id),
+                  );
                 },
               ),
               const SizedBox(height: 100),

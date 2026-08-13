@@ -109,6 +109,18 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<Either<Failure, List<ProductEntity>>> getProductsByIds({
+    required List<String> ids,
+  }) async {
+    try {
+      final products = await productDataSource.getProductsByIds(ids: ids);
+      return Right(List<ProductEntity>.from(products));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, PaginatedResult<ProductEntity>>>
   getProductsByCategory({
     required String categoryId,

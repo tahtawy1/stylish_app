@@ -26,6 +26,8 @@ abstract class ProductRemoteDataSource {
   });
   // get product by id
   Future<ProductModel> getProductById({required String id});
+  // get products by ids using FieldPath.documentId whereIn with chunking
+  Future<List<ProductModel>> getProductsByIds({required List<String> ids});
   Future<PaginatedResult<ProductModel>> getProductsByCategory({
     required String categoryId,
     int limit,

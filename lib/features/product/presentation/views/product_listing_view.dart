@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/widgets/product_card.dart';
@@ -64,10 +65,6 @@ class _ProductListingViewState extends State<ProductListingView> {
       appBar: AppBar(
         title: BlocBuilder<ProductListingCubit, ProductListingState>(
           builder: (context, state) {
-            final isLoading =
-                state.status == ProductListingStatus.loading ||
-                state.status == ProductListingStatus.initial;
-
             return Text(widget.name, style: context.textStyle.titleLarge);
           },
         ),
@@ -180,23 +177,32 @@ class _ProductListingViewState extends State<ProductListingView> {
                           crossAxisSpacing: 20,
                           itemCount: isLoading ? 6 : products.length,
                           itemBuilder: (context, index) {
-                            return ProductCard(
-                              product: products[index],
-                              onProductTap: (id) {
-                                context.push(
-                                  '/product_details',
-                                  extra: products[index].id,
+                            final product = products[index];
+                            return BlocBuilder<FavoriteCubit, FavoriteState>(
+                              builder: (context, favState) {
+                                return ProductCard(
+                                  product: product,
+                                  onProductTap: (id) {
+                                    context.push(
+                                      '/product_details',
+                                      extra: product.id,
+                                    );
+                                  },
+                                  leftMargin: 0,
+                                  rightMargin: 0,
+                                  onFavTap: (id) {
+                                    final isAuthenticated = AuthGuard.requireAuth(
+                                      context,
+                                      action: LoginRequiredAction.favorites,
+                                    );
+                                    if (!isAuthenticated) return;
+                                    context.read<FavoriteCubit>().toggleFavorite(
+                                      productId: product.id,
+                                      isFavorite: favState.isFavorite(product.id),
+                                    );
+                                  },
+                                  isFavorite: favState.isFavorite(product.id),
                                 );
-                              },
-                              leftMargin: 0,
-                              rightMargin: 0,
-                              onFavTap: () {
-                                final isAuthenticated = AuthGuard.requireAuth(
-                                  context,
-                                  action: LoginRequiredAction.favorites,
-                                );
-                                if (!isAuthenticated) return;
-                                //TODO add favorite logic
                               },
                             );
                           },

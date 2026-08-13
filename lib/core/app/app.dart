@@ -6,14 +6,21 @@ import 'package:stylish_app/core/localization/l10n/app_localizations.dart';
 import 'package:stylish_app/core/router/app_router.dart';
 import 'package:stylish_app/core/theme/app_theme.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/auth_cubit/auth_cubit.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthCubit>(
-      create: (context) => getIt<AuthCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(create: (context) => getIt<AuthCubit>()),
+        BlocProvider<FavoriteCubit>(
+          create: (context) =>
+              getIt<FavoriteCubit>()..getUserFavoriteProductsIds(),
+        ),
+      ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router,
         themeMode: ThemeMode.light,

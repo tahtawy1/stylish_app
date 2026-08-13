@@ -13,7 +13,8 @@ class ProductCard extends StatelessWidget {
   final double leftMargin;
   final double rightMargin;
   final Function(String) onProductTap;
-  final VoidCallback onFavTap;
+  final Function(String) onFavTap;
+  final bool isFavorite;
 
   const ProductCard({
     super.key,
@@ -22,6 +23,7 @@ class ProductCard extends StatelessWidget {
     required this.rightMargin,
     required this.onProductTap,
     required this.onFavTap,
+    required this.isFavorite,
   });
 
   @override
@@ -66,7 +68,7 @@ class ProductCard extends StatelessWidget {
             top: 10,
             right: 10,
             child: GestureDetector(
-              onTap: onFavTap,
+              onTap: () => onFavTap(product.id),
               child: Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
@@ -76,9 +78,11 @@ class ProductCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.favorite_border_rounded,
+                  isFavorite
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
                   size: 18,
-                  color: context.colors.onSurface,
+                  color: isFavorite ? AppColors.red : context.colors.onSurface,
                 ),
               ),
             ),

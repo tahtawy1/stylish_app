@@ -68,5 +68,6 @@
     "readMore": "Read More. . .",
     "priceLabel": "Price",
     "noCategories": "No Categories",
-    "noProducts": "No Products"
+    "noProducts": "No Products",
+    "favorites": "Favorites"
 }

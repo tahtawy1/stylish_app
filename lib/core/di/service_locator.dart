@@ -25,6 +25,14 @@ import 'package:stylish_app/features/category/domain/repositories/category_repos
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/category/domain/use_cases/get_category_by_id_use_case.dart';
 import 'package:stylish_app/features/category/presentation/view_model/category_cubit/category_cubit.dart';
+import 'package:stylish_app/features/favorite/data/data_sources/favorite_remote_data_source.dart';
+import 'package:stylish_app/features/favorite/data/data_sources/favorite_remote_data_source_impl.dart';
+import 'package:stylish_app/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:stylish_app/features/favorite/domain/repositories/favorite_repository.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/add_to_favorite_use_case.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/get_user_favorite_products_ids_use_case.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/remove_favorite_use_case.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
 import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
@@ -40,12 +48,15 @@ import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_p
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_product_by_id.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_products_by_category_use_case.dart';
+import 'package:stylish_app/features/product/domain/use_cases/get_products_by_ids_use_case.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorites_cubit/favorites_cubit.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setupLocators() async {
+  await getIt.reset();
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => prefs);
 
@@ -208,6 +219,51 @@ Future<void> setupLocators() async {
       getOnSaleProductsUseCase: getIt<GetOnSaleProductsUseCase>(),
       getProductsByCategoryUseCase: getIt<GetProductsByCategoryUseCase>(),
       getCategoryByIdUseCase: getIt<GetCategoryByIdUseCase>(),
+    ),
+  );
+
+  // Favorite
+  getIt.registerLazySingleton<FavoriteRemoteDataSource>(
+    () => FavoriteRemoteDataSourceImpl(
+      firestore: getIt<FirebaseFirestore>(),
+      auth: getIt<FirebaseAuth>(),
+    ),
+  );
+  getIt.registerLazySingleton<FavoriteRepository>(
+    () => FavoriteRepositoryImpl(
+      remoteDataSource: getIt<FavoriteRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<AddToFavoriteUseCase>(
+    () => AddToFavoriteUseCase(favoriteRepository: getIt<FavoriteRepository>()),
+  );
+  getIt.registerLazySingleton<RemoveFavoriteUseCase>(
+    () =>
+        RemoveFavoriteUseCase(favoriteRepository: getIt<FavoriteRepository>()),
+  );
+  getIt.registerLazySingleton<GetUserFavoriteProductIdsUseCase>(
+    () => GetUserFavoriteProductIdsUseCase(
+      repository: getIt<FavoriteRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<FavoriteCubit>(
+    () => FavoriteCubit(
+      addToFavoriteUseCase: getIt<AddToFavoriteUseCase>(),
+      removeFavoriteUseCase: getIt<RemoveFavoriteUseCase>(),
+      getUserFavoriteProductIdsUseCase:
+          getIt<GetUserFavoriteProductIdsUseCase>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<GetProductsByIdsUseCase>(
+    () => GetProductsByIdsUseCase(repository: getIt<ProductRepository>()),
+  );
+
+  getIt.registerFactory<FavoritesCubit>(
+    () => FavoritesCubit(
+      getProductsByIdsUseCase: getIt<GetProductsByIdsUseCase>(),
+      favoriteCubit: getIt<FavoriteCubit>(),
     ),
   );
 }

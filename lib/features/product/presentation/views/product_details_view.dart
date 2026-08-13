@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
-import 'package:stylish_app/features/auth/domain/use_cases/is_authenticated_use_case.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/product/presentation/widgets/product_bottom_bar.dart';
@@ -53,18 +53,28 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     children: [
                       const SizedBox(height: 12),
 
-                      ProductImageCarousel(
-                        images: isLoading
-                            ? productBone.images
-                            : (state.images?.isNotEmpty == true
-                                  ? state.images!
-                                  : productBone.images),
-                        isFavorite: widget.isFavorite,
-                        onFavoriteTap: () {
-                          final isAuthenticated = AuthGuard.requireAuth(
-                            context,
+                      BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, favState) {
+                          final isFav = favState.isFavorite(widget.productId);
+                          return ProductImageCarousel(
+                            images: isLoading
+                                ? productBone.images
+                                : (state.images?.isNotEmpty == true
+                                      ? state.images!
+                                      : productBone.images),
+                            isFavorite: isFav,
+                            onFavoriteTap: () {
+                              final isAuthenticated = AuthGuard.requireAuth(
+                                context,
+                                action: LoginRequiredAction.favorites,
+                              );
+                              if (!isAuthenticated) return;
+                              context.read<FavoriteCubit>().toggleFavorite(
+                                productId: widget.productId,
+                                isFavorite: isFav,
+                              );
+                            },
                           );
-                          if (!isAuthenticated) return;
                         },
                       ),
 

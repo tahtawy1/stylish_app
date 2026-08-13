@@ -210,6 +210,37 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
+  Future<List<ProductModel>> getProductsByIds({
+    required List<String> ids,
+  }) async {
+    if (ids.isEmpty) return [];
+    try {
+      // Firestore whereIn supports max 30 items — split into chunks
+      const chunkSize = 30;
+      final chunks = <List<String>>[];
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final end = (i + chunkSize < ids.length) ? i + chunkSize : ids.length;
+        chunks.add(ids.sublist(i, end));
+      }
+
+      final futures = chunks.map(
+        (chunk) => firestore
+            .collection('products')
+            .where(FieldPath.documentId, whereIn: chunk)
+            .get(),
+      );
+
+      final snapshots = await Future.wait(futures);
+      return snapshots
+          .expand((s) => s.docs)
+          .map((doc) => ProductModel.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
   Future<PaginatedResult<ProductModel>> getProductsByCategory({
     required String categoryId,
     int limit = 20,
