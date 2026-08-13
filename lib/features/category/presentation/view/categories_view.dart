@@ -5,14 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/network/image_placeholder.dart';
-import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/category/domain/entities/category_entity.dart';
 import 'package:stylish_app/features/category/presentation/view_model/category_cubit/category_cubit.dart';
 import 'package:stylish_app/features/home/presentation/widgets/categories_section/categories_section.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 
 class CategoriesView extends StatelessWidget {
   const CategoriesView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +36,7 @@ class CategoriesView extends StatelessWidget {
             final categories = state.categories ?? [];
 
             if (!isLoading && categories.isEmpty) {
-              return const Center(child: Text('No Categories'));
+              return Center(child: Text(context.l10n.noCategories));
             }
 
             return Skeletonizer(
@@ -55,6 +54,14 @@ class CategoriesView extends StatelessWidget {
                     category: isLoading
                         ? CategoryEntity.fake()
                         : categories[index],
+                    onCategoryTap: (id, name) => context.push(
+                      '/product_listing',
+                      extra: {
+                        'type': ProductListingType.category,
+                        'id': id,
+                        'name': name,
+                      },
+                    ),
                   );
                 },
               ),
@@ -67,36 +74,44 @@ class CategoriesView extends StatelessWidget {
 }
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({super.key, required this.category});
+  const CategoryCard({
+    super.key,
+    required this.category,
+    required this.onCategoryTap,
+  });
 
   final CategoryEntity category;
+  final Function(String, String) onCategoryTap;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: category.imageUrl.isEmpty
-          ? CategoryBone(category: category)
-          : CachedNetworkImage(
-              imageUrl: category.imageUrl,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-              imageBuilder: (context, imageProvider) => Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image(
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                  CategoryInfo(categoryName: category.name),
-                ],
+    return GestureDetector(
+      onTap: () => onCategoryTap(category.id, category.name),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: category.imageUrl.isEmpty
+            ? CategoryBone(category: category)
+            : CachedNetworkImage(
+                imageUrl: category.imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                imageBuilder: (context, imageProvider) => Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                    CategoryInfo(categoryName: category.name),
+                  ],
+                ),
+                errorWidget: (_, _, _) => const ImagePlaceholder(),
+                placeholder: (_, _) => const ImagePlaceholder(),
               ),
-              errorWidget: (_, _, _) => const ImagePlaceholder(),
-              placeholder: (_, _) => const ImagePlaceholder(),
-            ),
+      ),
     );
   }
 }

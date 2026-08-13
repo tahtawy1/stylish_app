@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
+import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/register/register_form.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/register/register_terms_text.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_bottom_nav_text.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_header.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_or_divider.dart';
-import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_social_buttons.dart';
+import 'package:stylish_app/features/auth/presentation/widgets/shared/social_auth_button.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -64,6 +65,11 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CircularIconButton(
+                  icon: Icons.arrow_back_ios,
+                  onTap: () => context.pop(),
+                ),
+                const SizedBox(height: 16),
                 AuthHeader(
                   title: l10n.registerTitle,
                   subtitle: l10n.registerSubtitle,
@@ -120,14 +126,11 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 20),
                 AuthOrDivider(label: l10n.orDivider),
                 const SizedBox(height: 20),
-                AuthSocialButtons(
-                  googleLabel: l10n.registerWithGoogle,
-                  facebookLabel: l10n.registerWithFacebook,
-                  onGooglePressed: () {
+                SocialAuthButton(
+                  label: l10n.registerWithGoogle,
+                  iconPath: 'assets/images/google_icon.svg',
+                  onPressed: () {
                     context.read<RegisterCubit>().registerWithGoogle();
-                  },
-                  onFacebookPressed: () {
-                    // TODO: Facebook sign-up
                   },
                 ),
               ],

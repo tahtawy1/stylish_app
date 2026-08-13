@@ -501,6 +501,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Price'**
   String get priceLabel;
+
+  /// No description provided for @noCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No Categories'**
+  String get noCategories;
+
+  /// No description provided for @noProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'No Products'**
+  String get noProducts;
+
+  /// No description provided for @favorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
 }
 
 class _AppLocalizationsDelegate

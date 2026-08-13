@@ -11,8 +11,8 @@ class FilterButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsetsDirectional.only(end: 16),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: context.colors.primary,
