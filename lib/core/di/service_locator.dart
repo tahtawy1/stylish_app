@@ -107,7 +107,10 @@ Future<void> setupLocators() async {
     ),
   );
   getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(auth: getIt<FirebaseAuth>()),
+    () => AuthCubit(
+      auth: getIt<FirebaseAuth>(),
+      authRepository: getIt<AuthRepository>(),
+    ),
   );
 
   // Home

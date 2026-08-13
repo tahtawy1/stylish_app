@@ -10,7 +10,7 @@ import 'package:stylish_app/features/auth/presentation/widgets/register/register
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_bottom_nav_text.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_header.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_or_divider.dart';
-import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_social_buttons.dart';
+import 'package:stylish_app/features/auth/presentation/widgets/shared/social_auth_button.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -126,14 +126,11 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 20),
                 AuthOrDivider(label: l10n.orDivider),
                 const SizedBox(height: 20),
-                AuthSocialButtons(
-                  googleLabel: l10n.registerWithGoogle,
-                  facebookLabel: l10n.registerWithFacebook,
-                  onGooglePressed: () {
+                SocialAuthButton(
+                  label: l10n.registerWithGoogle,
+                  iconPath: 'assets/images/google_icon.svg',
+                  onPressed: () {
                     context.read<RegisterCubit>().registerWithGoogle();
-                  },
-                  onFacebookPressed: () {
-                    // TODO: Facebook sign-up
                   },
                 ),
               ],

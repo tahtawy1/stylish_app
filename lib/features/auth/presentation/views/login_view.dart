@@ -10,7 +10,7 @@ import 'package:stylish_app/features/auth/presentation/widgets/login/login_form.
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_bottom_nav_text.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_header.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_or_divider.dart';
-import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_social_buttons.dart';
+import 'package:stylish_app/features/auth/presentation/widgets/shared/social_auth_button.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -47,8 +47,7 @@ class _LoginViewState extends State<LoginView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(l10n.verifyEmailMessage)));
         } else if (state is LoginSuccess) {
-          // context.go('/home');
-          context.go('/layout');
+          context.pop();
         }
       },
       child: Scaffold(
@@ -106,15 +105,16 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(height: 20),
                 AuthOrDivider(label: l10n.orDivider),
                 const SizedBox(height: 20),
-                AuthSocialButtons(
-                  googleLabel: l10n.loginWithGoogle,
-                  facebookLabel: l10n.loginWithFacebook,
-                  onGooglePressed: () {
-                    context.read<LoginCubit>().loginWithGoogle();
-                  },
-                  onFacebookPressed: () {
-                    // TODO: Facebook sign-in
-                  },
+                Column(
+                  children: [
+                    SocialAuthButton(
+                      label: l10n.loginWithGoogle,
+                      iconPath: 'assets/images/google_icon.svg',
+                      onPressed: () {
+                        context.read<LoginCubit>().loginWithGoogle();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

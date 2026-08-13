@@ -4,6 +4,7 @@ import 'package:stylish_app/core/error/exceptions.dart';
 import 'package:stylish_app/core/error/failure.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:stylish_app/features/auth/data/models/user_model.dart';
+import 'package:stylish_app/features/auth/domain/entities/user_entity.dart';
 import 'package:stylish_app/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -87,16 +88,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signWithFacebook() async {
-    try {
-      await authDataSource.signWithFacebook();
-      return right(null);
-    } catch (e) {
-      return left(ServerFailure(message: e.toString()));
-    }
-  }
-
-  @override
   Future<Either<Failure, void>> signWithGoogle() async {
     try {
       await authDataSource.signWithGoogle();
@@ -110,6 +101,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, String>> getUserName() async {
     try {
       final result = await authDataSource.getUserName();
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity?>> getUserData() async {
+    try {
+      final result = await authDataSource.getUserData();
       return right(result);
     } catch (e) {
       return left(ServerFailure(message: e.toString()));
