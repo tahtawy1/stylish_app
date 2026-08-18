@@ -44,16 +44,10 @@ class _HeroSectionState extends State<HeroSection> {
                     carouselController: _controller,
                     itemCount: heroes.length,
                     itemBuilder: (context, index, realIndex) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: _HeroCard(hero: heroes[index]),
-                        ),
-                      );
+                      return _HeroCard(hero: heroes[index]);
                     },
                     options: CarouselOptions(
-                      height: 200,
+                      height: 230,
                       autoPlay: !isLoading && heroes.length > 1,
                       enableInfiniteScroll: !isLoading && heroes.length > 1,
                       autoPlayInterval: const Duration(seconds: 5),
@@ -139,8 +133,7 @@ class HeroBone extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.grey10.withValues(alpha: .5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.colors.outline.withValues(alpha: .5)),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Stack(
         children: [

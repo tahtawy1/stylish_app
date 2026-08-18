@@ -66,5 +66,40 @@
     "addToCart": "Add to Cart",
     "reviews": "reviews",
     "readMore": "Read More. . .",
-    "priceLabel": "Price"
+    "priceLabel": "Price",
+    "noCategories": "No Categories",
+    "noProducts": "No Products",
+    "favorites": "Favorites",
+    "reviewsTitle": "Reviews",
+    "ratings": "Ratings",
+    "mostRelevant": "Most Relevant",
+    "noReviews": "No reviews yet",
+    "timeToday": "Today",
+    "daysAgo": "{count} days ago",
+    "@daysAgo": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "oneWeekAgo": "1 week ago",
+    "weeksAgo": "{count} weeks ago",
+    "@weeksAgo": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "oneMonthAgo": "1 month ago",
+    "monthsAgo": "{count} months ago",
+    "@monthsAgo": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "defaultUserName": "User"
 }

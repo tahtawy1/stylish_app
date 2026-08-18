@@ -30,11 +30,15 @@ class AuthDataSourceImpl implements AuthDataSource {
         password: password,
       );
       if (credential.user != null) {
+        log(credential.user?.uid ?? 'No UID');
+        await credential.user!.updateDisplayName(name);
+        await credential.user!.reload();
         final userModel = UserModel(
           id: credential.user!.uid,
           name: name,
           email: email,
         );
+        log(userModel.id ?? 'No UID');
         await saveUser(userModel);
       }
     } on FirebaseAuthException catch (e) {
@@ -47,6 +51,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<void> saveUser(UserModel user) async {
     try {
+      log('Saving user: ${user.id}');
       await firestore.collection('users').doc(user.id).set({
         'uid': user.id,
         'name': user.name,
@@ -99,12 +104,6 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> signWithFacebook() {
-    // TODO: implement signWithFacebook
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> signWithGoogle() async {
     try {
       final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
@@ -141,6 +140,48 @@ class AuthDataSourceImpl implements AuthDataSource {
           .doc(auth.currentUser?.uid)
           .get();
       return userModel.data()?['name'] ?? '';
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel?> getUserData() async {
+    try {
+      final uid = auth.currentUser?.uid;
+      if (uid == null) return null;
+      final doc = await firestore.collection('users').doc(uid).get();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        return UserModel(
+          id: data['uid'] ?? data['id'] ?? uid,
+          name: data['name'] ?? auth.currentUser?.displayName ?? '',
+          email: data['email'] ?? auth.currentUser?.email ?? '',
+        );
+      }
+      if (auth.currentUser != null) {
+        return UserModel(
+          id: auth.currentUser!.uid,
+          name: auth.currentUser!.displayName ?? '',
+          email: auth.currentUser!.email ?? '',
+        );
+      }
+      return null;
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  bool get isAuthenticated => auth.currentUser != null;
+
+  @override
+  User? get currentUser => auth.currentUser;
+
+  @override
+  Future<void> logOut() async {
+    try {
+      await auth.signOut();
     } catch (e) {
       throw ServerException(message: e.toString());
     }

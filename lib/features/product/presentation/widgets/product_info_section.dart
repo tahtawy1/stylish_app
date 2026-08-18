@@ -51,7 +51,7 @@ class _ProductInfoSectionState extends State<ProductInfoSection> {
               ),
               const SizedBox(width: 6),
               Text(
-                '(${product.reviewCount} ${context.l10n.reviews})',
+                '(${product.ratingCount} ${context.l10n.ratings})',
                 style: context.textStyle.bodyMedium?.copyWith(
                   color: const Color(0xFF64B5F6),
                   fontWeight: FontWeight.w500,
