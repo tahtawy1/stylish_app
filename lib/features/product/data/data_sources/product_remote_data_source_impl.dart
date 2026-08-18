@@ -3,12 +3,37 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
-import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
+import 'package:stylish_app/core/pagination/paginated_result.dart';
+import 'package:stylish_app/features/product/domain/entities/product_filter_model.dart';
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   final FirebaseFirestore firestore;
 
   ProductRemoteDataSourceImpl({required this.firestore});
+
+  Query<Map<String, dynamic>> _applyFilter(
+    Query<Map<String, dynamic>> query,
+    ProductFilterModel? filter,
+  ) {
+    if (filter == null) return query;
+
+    if (filter.minPrice != null) {
+      query = query.where('price', isGreaterThanOrEqualTo: filter.minPrice);
+    }
+    if (filter.maxPrice != null) {
+      query = query.where('price', isLessThanOrEqualTo: filter.maxPrice);
+    }
+    if (filter.ratingFourAndAbove) {
+      query = query.where('averageRating', isGreaterThanOrEqualTo: 4);
+    }
+
+    if (filter.sortOption != null) {
+      final descending = filter.sortOption == ProductSortOption.priceHighToLow;
+      query = query.orderBy('price', descending: descending);
+    }
+
+    return query;
+  }
 
   @override
   Future<List<ProductModel>> getAllProducts() async {
@@ -27,27 +52,42 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<PaginatedResult<ProductModel>> getNewArrivalsProducts({
     int limit = 20,
     DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+    ProductFilterModel? filter,
   }) async {
     try {
-      final res = firestore
+      Query<Map<String, dynamic>> res = firestore
           .collection('products')
-          .where('isAvailable', isEqualTo: true)
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
+          .where('isAvailable', isEqualTo: true);
+      res = _applyFilter(res, filter);
+      if (filter?.sortOption == null) {
+        res = res.orderBy('createdAt', descending: true);
+      }
+
+      res = res.limit(limit + 1);
 
       final QuerySnapshot<Map<String, dynamic>> result;
+      final cursorField = filter?.sortOption != null ? 'price' : 'createdAt';
+
       if (lastDocument != null) {
-        result = await res.startAfterDocument(lastDocument).get();
+        result = await res.startAfter([
+          lastDocument.data()![cursorField],
+        ]).get();
       } else {
         result = await res.get();
       }
-      final products = result.docs
+
+      final hasMore = result.docs.length > limit;
+
+      final docs = hasMore ? result.docs.take(limit).toList() : result.docs;
+
+      final products = docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
+
       return PaginatedResult(
         items: products,
-        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
-        hasMore: result.docs.length == limit,
+        lastDocument: hasMore ? docs.last : null,
+        hasMore: hasMore,
       );
     } catch (e) {
       throw Exception(e.toString());
@@ -58,23 +98,45 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<PaginatedResult<ProductModel>> getBestSellersProducts({
     int limit = 20,
     DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+    ProductFilterModel? filter,
   }) async {
     try {
-      final res = firestore
+      Query<Map<String, dynamic>> res = firestore
           .collection('products')
-          .where('isAvailable', isEqualTo: true)
-          .orderBy('totalSales', descending: true)
-          .limit(limit);
-      final result = lastDocument != null
-          ? await res.startAfterDocument(lastDocument).get()
-          : await res.get();
-      final products = result.docs
+          .where('isAvailable', isEqualTo: true);
+
+      res = _applyFilter(res, filter);
+
+      if (filter?.sortOption == null) {
+        res = res.orderBy('totalSales', descending: true);
+      }
+
+      res = res.limit(limit + 1);
+
+      final QuerySnapshot<Map<String, dynamic>> result;
+
+      final cursorField = filter?.sortOption != null ? 'price' : 'totalSales';
+
+      if (lastDocument != null) {
+        result = await res.startAfter([
+          lastDocument.data()![cursorField],
+        ]).get();
+      } else {
+        result = await res.get();
+      }
+
+      final hasMore = result.docs.length > limit;
+
+      final docs = hasMore ? result.docs.take(limit).toList() : result.docs;
+
+      final products = docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
+
       return PaginatedResult(
         items: products,
-        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
-        hasMore: result.docs.length == limit,
+        lastDocument: hasMore ? docs.last : null,
+        hasMore: hasMore,
       );
     } catch (e) {
       log(e.toString());
@@ -86,27 +148,49 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   Future<PaginatedResult<ProductModel>> getOnSaleProducts({
     int limit = 20,
     DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+    ProductFilterModel? filter,
   }) async {
     try {
-      final res = firestore
+      Query<Map<String, dynamic>> res = firestore
           .collection('products')
           .where('isAvailable', isEqualTo: true)
-          .where('discountPercentage', isGreaterThan: 0)
-          .orderBy('discountPercentage');
-      final result = lastDocument != null
-          ? await res.startAfterDocument(lastDocument).limit(limit).get()
-          : await res.limit(limit).get();
-      final products = result.docs
+          .where('discountPercentage', isGreaterThan: 0);
+
+      res = _applyFilter(res, filter);
+
+      if (filter?.sortOption == null) {
+        res = res.orderBy('discountPercentage', descending: true);
+      }
+
+      final QuerySnapshot<Map<String, dynamic>> result;
+
+      final cursorField = filter?.sortOption != null
+          ? 'price'
+          : 'discountPercentage';
+
+      if (lastDocument != null) {
+        result = await res.startAfter([
+          lastDocument.data()![cursorField],
+        ]).get();
+      } else {
+        result = await res.get();
+      }
+
+      final hasMore = result.docs.length > limit;
+
+      final docs = hasMore ? result.docs.take(limit).toList() : result.docs;
+
+      final products = docs
           .map((e) => ProductModel.fromJson(e.data()))
           .toList();
+
       return PaginatedResult(
         items: products,
-        lastDocument: result.docs.isNotEmpty ? result.docs.last : null,
-        hasMore: result.docs.length == limit,
+        lastDocument: hasMore ? docs.last : null,
+        hasMore: hasMore,
       );
     } catch (e) {
       log(e.toString());
-
       throw Exception(e.toString());
     }
   }
@@ -119,6 +203,86 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         return ProductModel.fromJson(result.data()!);
       }
       throw Exception('Product not found'); // TODO: add a custom exception
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getProductsByIds({
+    required List<String> ids,
+  }) async {
+    if (ids.isEmpty) return [];
+    try {
+      // Firestore whereIn supports max 30 items — split into chunks
+      const chunkSize = 30;
+      final chunks = <List<String>>[];
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final end = (i + chunkSize < ids.length) ? i + chunkSize : ids.length;
+        chunks.add(ids.sublist(i, end));
+      }
+
+      final futures = chunks.map(
+        (chunk) => firestore
+            .collection('products')
+            .where(FieldPath.documentId, whereIn: chunk)
+            .get(),
+      );
+
+      final snapshots = await Future.wait(futures);
+      return snapshots
+          .expand((s) => s.docs)
+          .map((doc) => ProductModel.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<PaginatedResult<ProductModel>> getProductsByCategory({
+    required String categoryId,
+    int limit = 20,
+    DocumentSnapshot<Map<String, dynamic>>? lastDocument,
+    ProductFilterModel? filter,
+  }) async {
+    try {
+      Query<Map<String, dynamic>> res = firestore
+          .collection('products')
+          .where('isAvailable', isEqualTo: true)
+          .where('categoryId', isEqualTo: categoryId);
+
+      res = _applyFilter(res, filter);
+
+      if (filter?.sortOption == null) {
+        res = res.orderBy('createdAt', descending: true);
+      }
+
+      res = res.limit(limit + 1);
+
+      final QuerySnapshot<Map<String, dynamic>> result;
+      final cursorField = filter?.sortOption != null ? 'price' : 'createdAt';
+
+      if (lastDocument != null) {
+        result = await res.startAfter([
+          lastDocument.data()![cursorField],
+        ]).get();
+      } else {
+        result = await res.get();
+      }
+
+      final hasMore = result.docs.length > limit;
+
+      final docs = hasMore ? result.docs.take(limit).toList() : result.docs;
+
+      final products = docs
+          .map((e) => ProductModel.fromJson(e.data()))
+          .toList();
+      return PaginatedResult(
+        items: products,
+        lastDocument: hasMore ? docs.last : null,
+        hasMore: hasMore,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }

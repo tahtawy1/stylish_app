@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_app/core/widgets/app_navigation_bar.dart';
+import 'package:stylish_app/features/favorite/presentation/view/favorites_view.dart';
 import 'package:stylish_app/features/home/presentation/views/home_view.dart';
 
 class Layout extends StatefulWidget {
@@ -14,9 +15,11 @@ class _LayoutState extends State<Layout> {
   final List<Widget> screens = [
     const HomeView(),
     const Scaffold(),
-    const Scaffold(),
+    const FavoritesView(),
+
     const Scaffold(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
