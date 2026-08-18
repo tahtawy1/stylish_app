@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
@@ -91,6 +92,17 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             action: LoginRequiredAction.reviews,
                           );
                           if (!isAuthenticated) return;
+                          final product = state.product ?? productBone;
+                          context.push(
+                            '/product_reviews',
+                            extra: {
+                              'productId': widget.productId,
+                              'averageRating': product.averageRating,
+                              'totalRatings': product.ratingCount,
+                              'totalReviewsWithComments':
+                                  product.totalReviewsWithComments,
+                            },
+                          );
                         },
                       ),
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
@@ -16,6 +17,8 @@ import 'package:stylish_app/features/product/presentation/view_model/custom_sect
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/product/presentation/views/product_details_view.dart';
 import 'package:stylish_app/features/product/presentation/views/product_listing_view.dart';
+import 'package:stylish_app/features/review/presentation/view/product_reviews_view.dart';
+import 'package:stylish_app/features/review/presentation/view_model/review_cubit/review_cubit.dart';
 import 'package:stylish_app/features/splash/presentation/view/splash_view.dart';
 
 class AppRouter {
@@ -81,6 +84,27 @@ class AppRouter {
           return BlocProvider(
             create: (context) => getIt<ProductListingCubit>(),
             child: ProductListingView(type: type, id: id, name: name),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/product_reviews',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final productId = extra['productId'] as String;
+          final averageRating = extra['averageRating'] as double;
+          final totalRatings = extra['totalRatings'] as int;
+          final totalReviewsWithComments =
+              extra['totalReviewsWithComments'] as int;
+
+          return BlocProvider<ReviewCubit>(
+            create: (context) => getIt<ReviewCubit>(),
+            child: ProductReviewsView(
+              productId: productId,
+              averageRating: averageRating,
+              totalRatings: totalRatings,
+              totalReviewsWithComments: totalReviewsWithComments,
+            ),
           );
         },
       ),

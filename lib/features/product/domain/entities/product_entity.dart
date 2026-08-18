@@ -12,8 +12,8 @@ class ProductEntity {
   final double? discountPercentage;
   final int totalSales;
   final double averageRating;
-  final int reviewCount;
-
+  final int ratingCount;
+  final int totalReviewsWithComments;
   final bool isAvailable;
 
   final List<String> images;
@@ -35,7 +35,8 @@ class ProductEntity {
     required this.discountPercentage,
     required this.totalSales,
     required this.averageRating,
-    required this.reviewCount,
+    required this.ratingCount,
+    required this.totalReviewsWithComments,
     required this.isAvailable,
     required this.images,
     required this.colorVariants,
@@ -62,7 +63,8 @@ class ProductEntity {
     discountPercentage: 0,
     totalSales: 100,
     averageRating: 4.5,
-    reviewCount: 20,
+    ratingCount: 20,
+    totalReviewsWithComments: 10,
     isAvailable: true,
     images: const [],
     colorVariants: const [],

@@ -14,7 +14,8 @@ class ProductModel extends ProductEntity {
     required super.discountPercentage,
     required super.totalSales,
     required super.averageRating,
-    required super.reviewCount,
+    required super.ratingCount,
+    required super.totalReviewsWithComments,
     required super.isAvailable,
     required super.images,
     required super.colorVariants,
@@ -35,7 +36,9 @@ class ProductModel extends ProductEntity {
       discountPercentage: (json['discountPercentage'] as num?)?.toDouble(),
       totalSales: (json['totalSales'] as num?)?.toInt() ?? 0,
       averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
-      reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
+      ratingCount: (json['ratingCount'] as num?)?.toInt() ?? 0,
+      totalReviewsWithComments:
+          (json['totalReviewsWithComments'] as num?)?.toInt() ?? 0,
       isAvailable: json['isAvailable'] as bool? ?? true,
       images:
           (json['images'] as List<dynamic>?)
@@ -77,7 +80,8 @@ class ProductModel extends ProductEntity {
       'discountPercentage': discountPercentage,
       'totalSales': totalSales,
       'averageRating': averageRating,
-      'reviewCount': reviewCount,
+      'ratingCount': ratingCount,
+      'totalReviewsWithComments': totalReviewsWithComments,
       'isAvailable': isAvailable,
       'images': images,
       'colorVariants': colorVariants

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
-import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
+import 'package:stylish_app/core/pagination/paginated_result.dart';
 import 'package:stylish_app/features/product/domain/entities/product_filter_model.dart';
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -27,7 +27,6 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       query = query.where('averageRating', isGreaterThanOrEqualTo: 4);
     }
 
-    // Only override the default orderBy when a price sort was explicitly chosen.
     if (filter.sortOption != null) {
       final descending = filter.sortOption == ProductSortOption.priceHighToLow;
       query = query.orderBy('price', descending: descending);

@@ -181,8 +181,9 @@ Future<void> seedProducts() async {
           (3.8 + (index % 12) * 0.1).toStringAsFixed(1),
         ),
 
-        reviewCount: 15 + index * 4,
+        ratingCount: 15 + index * 4,
         totalSales: 30 + index * 12,
+        totalReviewsWithComments: 5 + (index * 2),
         isAvailable: true,
 
         // General product images.
@@ -208,7 +209,79 @@ Future<void> seedProducts() async {
   for (final entry in dummyProducts) {
     batch.set(entry.key, entry.value.toJson());
   }
+  final reviewsCollection = firestore.collection('reviews');
 
+  final reviewsBatch = firestore.batch();
+
+  final reviewUsers = [
+    'Wade Warren',
+    'Guy Hawkins',
+    'Robert Fox',
+    'Esther Howard',
+    'Brooklyn Simmons',
+    'Jenny Wilson',
+    'Cody Fisher',
+    'Kristin Watson',
+    'Darlene Robertson',
+    'Courtney Henry',
+  ];
+
+  final reviewComments = [
+    'The item is very good, I really like the quality and design.',
+    'The seller was very fast and the item arrived quickly.',
+    'The quality is really good and I highly recommend it.',
+    'Great quality and comfortable to wear. Would buy again.',
+    'The product looks exactly like the pictures. Very satisfied.',
+    'Good material and perfect fit. I am happy with my purchase.',
+    'Really nice product for the price. Highly recommended.',
+    'The quality exceeded my expectations.',
+    'Very comfortable and stylish. I love it.',
+    'Everything was perfect from the quality to the delivery.',
+  ];
+
+  for (
+    var productIndex = 0;
+    productIndex < dummyProducts.length;
+    productIndex++
+  ) {
+    final product = dummyProducts[productIndex].value;
+
+    final reviewCount = 5 + (productIndex % 6);
+
+    for (var reviewIndex = 0; reviewIndex < reviewCount; reviewIndex++) {
+      final userIndex = (productIndex + reviewIndex) % reviewUsers.length;
+
+      final ratingOptions = [5.0, 5.0, 4.0, 4.0, 4.0, 3.0];
+
+      final rating =
+          ratingOptions[(productIndex + reviewIndex) % ratingOptions.length];
+
+      final reviewId = '${product.id}_review_$reviewIndex';
+
+      final reviewRef = reviewsCollection
+          .doc(product.id)
+          .collection('items')
+          .doc(reviewId);
+
+      reviewsBatch.set(reviewRef, {
+        'id': reviewId,
+
+        'userId': 'user_${userIndex + 1}',
+
+        'userName': reviewUsers[userIndex],
+
+        'rating': rating,
+
+        'comment': reviewComments[userIndex],
+
+        'createdAt': Timestamp.fromDate(
+          now.subtract(Duration(days: productIndex + reviewIndex + 1)),
+        ),
+      });
+    }
+  }
+
+  await reviewsBatch.commit();
   await batch.commit();
 
   debugPrint('✅ 50 Dummy Products Added Successfully');

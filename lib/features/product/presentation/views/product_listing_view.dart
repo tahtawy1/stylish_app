@@ -63,11 +63,7 @@ class _ProductListingViewState extends State<ProductListingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: BlocBuilder<ProductListingCubit, ProductListingState>(
-          builder: (context, state) {
-            return Text(widget.name, style: context.textStyle.titleLarge);
-          },
-        ),
+        title: Text(widget.name, style: context.textStyle.titleLarge),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
@@ -191,15 +187,20 @@ class _ProductListingViewState extends State<ProductListingView> {
                                   leftMargin: 0,
                                   rightMargin: 0,
                                   onFavTap: (id) {
-                                    final isAuthenticated = AuthGuard.requireAuth(
-                                      context,
-                                      action: LoginRequiredAction.favorites,
-                                    );
+                                    final isAuthenticated =
+                                        AuthGuard.requireAuth(
+                                          context,
+                                          action: LoginRequiredAction.favorites,
+                                        );
                                     if (!isAuthenticated) return;
-                                    context.read<FavoriteCubit>().toggleFavorite(
-                                      productId: product.id,
-                                      isFavorite: favState.isFavorite(product.id),
-                                    );
+                                    context
+                                        .read<FavoriteCubit>()
+                                        .toggleFavorite(
+                                          productId: product.id,
+                                          isFavorite: favState.isFavorite(
+                                            product.id,
+                                          ),
+                                        );
                                   },
                                   isFavorite: favState.isFavorite(product.id),
                                 );

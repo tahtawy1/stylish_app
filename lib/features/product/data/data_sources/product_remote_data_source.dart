@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:stylish_app/features/product/data/models/product_model.dart';
-import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
+import 'package:stylish_app/core/pagination/paginated_result.dart';
 import 'package:stylish_app/features/product/domain/entities/product_filter_model.dart';
 
 abstract class ProductRemoteDataSource {

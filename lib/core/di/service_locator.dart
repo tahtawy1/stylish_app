@@ -52,6 +52,12 @@ import 'package:stylish_app/features/product/domain/use_cases/get_products_by_id
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/favorite/presentation/view_model/favorites_cubit/favorites_cubit.dart';
+import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source.dart';
+import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source_impl.dart';
+import 'package:stylish_app/features/review/data/repositories/review_repository_impl.dart';
+import 'package:stylish_app/features/review/domain/repositories/review_repository.dart';
+import 'package:stylish_app/features/review/domain/use_cases/get_product_reviews_use_case.dart';
+import 'package:stylish_app/features/review/presentation/view_model/review_cubit/review_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -264,6 +270,25 @@ Future<void> setupLocators() async {
     () => FavoritesCubit(
       getProductsByIdsUseCase: getIt<GetProductsByIdsUseCase>(),
       favoriteCubit: getIt<FavoriteCubit>(),
+    ),
+  );
+
+  // Review
+
+  getIt.registerLazySingleton<ReviewRemoteDataSource>(
+    () => ReviewRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<ReviewRepository>(
+    () =>
+        ReviewRepositoryImpl(remoteDataSource: getIt<ReviewRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetProductReviewsUseCase>(
+    () => GetProductReviewsUseCase(repository: getIt<ReviewRepository>()),
+  );
+
+  getIt.registerFactory<ReviewCubit>(
+    () => ReviewCubit(
+      getProductReviewsUseCase: getIt<GetProductReviewsUseCase>(),
     ),
   );
 }

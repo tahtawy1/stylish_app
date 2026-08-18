@@ -225,4 +225,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get favorites => 'Favorites';
+
+  @override
+  String get reviewsTitle => 'Reviews';
+
+  @override
+  String get ratings => 'Ratings';
+
+  @override
+  String get mostRelevant => 'Most Relevant';
+
+  @override
+  String get noReviews => 'No reviews yet';
+
+  @override
+  String get timeToday => 'Today';
+
+  @override
+  String daysAgo(int count) {
+    return '$count days ago';
+  }
+
+  @override
+  String get oneWeekAgo => '1 week ago';
+
+  @override
+  String weeksAgo(int count) {
+    return '$count weeks ago';
+  }
+
+  @override
+  String get oneMonthAgo => '1 month ago';
+
+  @override
+  String monthsAgo(int count) {
+    return '$count months ago';
+  }
+
+  @override
+  String get defaultUserName => 'User';
 }
