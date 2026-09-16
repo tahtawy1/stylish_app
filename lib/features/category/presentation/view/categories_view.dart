@@ -42,7 +42,7 @@ class CategoriesView extends StatelessWidget {
             return Skeletonizer(
               enabled: isLoading,
               child: GridView.builder(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 itemCount: isLoading ? 6 : categories.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

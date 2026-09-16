@@ -27,7 +27,7 @@ class _LayoutState extends State<Layout> {
       body: screens[currentIndex],
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
           child: AppNavigationBar(
             currentIndex: currentIndex,
             onTap: (index) {
