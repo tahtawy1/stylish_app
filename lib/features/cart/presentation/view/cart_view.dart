@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:stylish_app/core/utils/auth_guard.dart';
 import 'package:stylish_app/features/cart/domain/entities/cart_item_with_product_entity.dart';
 import 'package:stylish_app/features/cart/presentation/view/widgets/cart_app_bar.dart';
 import 'package:stylish_app/features/cart/presentation/view/widgets/cart_checkout_bar.dart';
@@ -56,7 +58,14 @@ class CartView extends StatelessWidget {
               ? CartCheckoutBar(
                   subtotal: state.subtotal,
                   isEnabled: true,
-                  onCheckout: () {},
+                  onCheckout: () {
+                    final isAuthenticated = AuthGuard.requireAuth(
+                      context,
+                      action: LoginRequiredAction.checkout,
+                    );
+                    if (!isAuthenticated) return;
+                    context.push('/checkout');
+                  },
                 )
               : null,
         );

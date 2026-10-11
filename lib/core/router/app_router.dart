@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
+import 'package:stylish_app/features/auth/checkout/presentation/view/checkout_view.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
@@ -120,6 +121,13 @@ class AppRouter {
             ),
           );
         },
+      ),
+      GoRoute(
+        path: '/checkout',
+        builder: (context, state) => BlocProvider<CartCubit>.value(
+          value: getIt<CartCubit>()..fetchCartData(),
+          child: const CheckoutView(),
+        ),
       ),
     ],
   );
