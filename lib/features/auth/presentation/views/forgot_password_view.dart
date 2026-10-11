@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
+import 'package:stylish_app/core/widgets/circular_icon_button.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/forgot_password/forgot_password_form.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_header.dart';
@@ -47,7 +48,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           backgroundColor: context.colors.surface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          leading: const BackButton(),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => context.pop(),
+          ),
         ),
         body: SafeArea(
           child: Padding(

@@ -6,7 +6,7 @@ import 'package:stylish_app/features/category/domain/entities/category_entity.da
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
 import 'package:stylish_app/features/hero/domain/entities/hero_section_entity.dart';
 import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
-import 'package:stylish_app/features/product/domain/entities/paginated_result.dart';
+import 'package:stylish_app/core/pagination/paginated_result.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
@@ -31,6 +31,9 @@ class HomeCubit extends Cubit<HomeState> {
   final GetBestSellersProductsUseCase getBestSellersProductsUseCase;
   final GetOnSaleProductsUseCase getOnSaleProductsUseCase;
   Future<void> loadHome() async {
+    if (isClosed) {
+      return;
+    }
     emit(state.copyWith(status: HomeStatus.loading));
 
     final results = await Future.wait<Either<Failure, dynamic>>([
@@ -45,9 +48,12 @@ class HomeCubit extends Cubit<HomeState> {
     final userNameResult = results[0] as Either<Failure, String>;
     final heroResult = results[1] as Either<Failure, List<HeroSectionEntity>>;
     final categoryResult = results[2] as Either<Failure, List<CategoryEntity>>;
-    final newArrivalsResult = results[3] as Either<Failure, PaginatedResult>;
-    final bestSellersResult = results[4] as Either<Failure, PaginatedResult>;
-    final onSaleResult = results[5] as Either<Failure, PaginatedResult>;
+    final newArrivalsResult =
+        results[3] as Either<Failure, PaginatedResult<ProductEntity>>;
+    final bestSellersResult =
+        results[4] as Either<Failure, PaginatedResult<ProductEntity>>;
+    final onSaleResult =
+        results[5] as Either<Failure, PaginatedResult<ProductEntity>>;
     String? error;
     String userName = '';
     List<HeroSectionEntity> heroes = [];

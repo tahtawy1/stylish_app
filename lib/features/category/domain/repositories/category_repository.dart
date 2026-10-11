@@ -4,4 +4,5 @@ import 'package:stylish_app/features/category/domain/entities/category_entity.da
 
 abstract class CategoryRepository {
   Future<Either<Failure, List<CategoryEntity>>> getCategories({int? limit});
+  Future<Either<Failure, CategoryEntity>> getCategoryById({required String id});
 }

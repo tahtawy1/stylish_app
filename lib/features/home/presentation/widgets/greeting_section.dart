@@ -1,9 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/greeting_helper.dart';
-import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
+import 'package:stylish_app/features/auth/presentation/view_model/auth_cubit/auth_cubit.dart';
 import 'package:stylish_app/features/home/presentation/widgets/notification_button.dart';
 
 class GreetingSection extends StatelessWidget {
@@ -21,29 +21,31 @@ class GreetingSection extends StatelessWidget {
           children: [
             Text(
               getGreeting(context),
-              style: context.textStyle.bodySmall?.copyWith(
+              style: context.textStyle.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 4),
-            BlocBuilder<HomeCubit, HomeState>(
+            BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
-                final isLoading = state.status == HomeStatus.loading;
-                return Skeletonizer(
-                  enabled: isLoading,
-                  child: Text(
-                    state.userName,
-                    style: context.textStyle.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.onSurface,
-                    ),
+                final nameEntity = state.userEntity?.name;
+                final displayName = state.user?.displayName;
+                final nameToShow = (nameEntity != null && nameEntity.trim().isNotEmpty)
+                    ? nameEntity
+                    : ((displayName != null && displayName.trim().isNotEmpty)
+                        ? displayName
+                        : 'Guest');
+                return Text(
+                  nameToShow,
+                  style: context.textStyle.headlineLarge?.copyWith(
+                    color: context.colors.onSurface,
                   ),
                 );
               },
             ),
           ],
         ),
-        NotificationButton(onTap: onNotificationTap),
+        NotificationButton(onTap: () => FirebaseAuth.instance.signOut()),
       ],
     );
   }

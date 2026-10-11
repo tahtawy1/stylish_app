@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
+import 'package:stylish_app/core/utils/auth_guard.dart';
+import 'package:stylish_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/product/presentation/widgets/product_bottom_bar.dart';
@@ -30,9 +35,20 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     context.read<ProductDetailsCubit>().load(id: widget.productId);
   }
 
+  bool requireSize = false;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+    return BlocListener<CartCubit, CartState>(
+      listenWhen: (prev, curr) => curr.userMessage != null && curr.userMessage != prev.userMessage,
+      listener: (context, cartState) {
+        if (cartState.userMessage != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(cartState.userMessage!)));
+          context.read<CartCubit>().clearUserMessage();
+        }
+      },
+      child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
       builder: (context, state) {
         final isLoading = state.status == ProductDetailsStatus.loading;
         final product = state.product;
@@ -51,14 +67,29 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     children: [
                       const SizedBox(height: 12),
 
-                      ProductImageCarousel(
-                        images: isLoading
-                            ? productBone.images
-                            : (state.images?.isNotEmpty == true
-                                  ? state.images!
-                                  : productBone.images),
-                        isFavorite: widget.isFavorite,
-                        onFavoriteTap: () {},
+                      BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, favState) {
+                          final isFav = favState.isFavorite(widget.productId);
+                          return ProductImageCarousel(
+                            images: isLoading
+                                ? productBone.images
+                                : (state.images?.isNotEmpty == true
+                                      ? state.images!
+                                      : productBone.images),
+                            isFavorite: isFav,
+                            onFavoriteTap: () {
+                              final isAuthenticated = AuthGuard.requireAuth(
+                                context,
+                                action: LoginRequiredAction.favorites,
+                              );
+                              if (!isAuthenticated) return;
+                              context.read<FavoriteCubit>().toggleFavorite(
+                                productId: widget.productId,
+                                isFavorite: isFav,
+                              );
+                            },
+                          );
+                        },
                       ),
 
                       const SizedBox(height: 20),
@@ -68,7 +99,24 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         product: isLoading
                             ? productBone
                             : state.product ?? productBone,
-                        onReviewsTap: () {},
+                        onReviewsTap: () {
+                          final isAuthenticated = AuthGuard.requireAuth(
+                            context,
+                            action: LoginRequiredAction.reviews,
+                          );
+                          if (!isAuthenticated) return;
+                          final product = state.product ?? productBone;
+                          context.push(
+                            '/product_reviews',
+                            extra: {
+                              'productId': widget.productId,
+                              'averageRating': product.averageRating,
+                              'totalRatings': product.ratingCount,
+                              'totalReviewsWithComments':
+                                  product.totalReviewsWithComments,
+                            },
+                          );
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -91,6 +139,18 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             sizeVariant,
                           );
                         },
+                        requireSize: requireSize,
+                        quantity: state.quantity,
+                        onQuantityIncrement: () {
+                          context
+                              .read<ProductDetailsCubit>()
+                              .incrementQuantity();
+                        },
+                        onQuantityDecrement: () {
+                          context
+                              .read<ProductDetailsCubit>()
+                              .decrementQuantity();
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -103,10 +163,32 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           bottomNavigationBar: ProductBottomBar(
             isLoading: isLoading,
             product: isLoading ? productBone : product ?? productBone,
-            onAddToCart: () {},
+            onAddToCart: () {
+              final selectedSize =
+                  context.read<ProductDetailsCubit>().state.selectedSizeVariant;
+              if (selectedSize == null) {
+                requireSize = true;
+                setState(() {});
+                return;
+              }
+              requireSize = false;
+              setState(() {});
+
+              context.read<CartCubit>().addToCart(
+                product: state.product!,
+                cartItem: CartItemEntity(
+                  productId: widget.productId,
+                  variantId: state.selectedColorVariant?.id ?? '',
+                  size: selectedSize.size,
+                  quantity: state.quantity,
+                ),
+                stock: selectedSize.quantity,
+              );
+            },
           ),
         );
       },
+    ),
     );
   }
 }

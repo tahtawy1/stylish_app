@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source_impl.dart';
@@ -14,28 +15,49 @@ import 'package:stylish_app/features/auth/domain/use_cases/login_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/register_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/send_email_verification_use_case.dart';
 import 'package:stylish_app/features/auth/domain/use_cases/sign_with_google_use_case.dart';
+import 'package:stylish_app/features/auth/presentation/view_model/auth_cubit/auth_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_local_data_source.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_local_data_source_impl.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_remote_data_source.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_remote_data_source_impl.dart';
+import 'package:stylish_app/features/cart/data/models/cart_item_model.dart';
+import 'package:stylish_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:stylish_app/features/cart/domain/repositories/cart_repository.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_local_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_remote_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/calculate_subtotal_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/clear_local_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/decrement_cart_item_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/get_cart_items_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/increment_cart_item_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/remove_from_cart_use_case.dart';
+import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
 import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source.dart';
 import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source_impl.dart';
 import 'package:stylish_app/features/category/data/repositories/category_repository_impl.dart';
 import 'package:stylish_app/features/category/domain/repositories/category_repository.dart';
 import 'package:stylish_app/features/category/domain/use_cases/get_categories_use_case.dart';
+import 'package:stylish_app/features/category/domain/use_cases/get_category_by_id_use_case.dart';
 import 'package:stylish_app/features/category/presentation/view_model/category_cubit/category_cubit.dart';
+import 'package:stylish_app/features/favorite/data/data_sources/favorite_remote_data_source.dart';
+import 'package:stylish_app/features/favorite/data/data_sources/favorite_remote_data_source_impl.dart';
+import 'package:stylish_app/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:stylish_app/features/favorite/domain/repositories/favorite_repository.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/add_to_favorite_use_case.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/get_user_favorite_products_ids_use_case.dart';
+import 'package:stylish_app/features/favorite/domain/use_cases/remove_favorite_use_case.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorites_cubit/favorites_cubit.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
 import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
 import 'package:stylish_app/features/hero/domain/repositories/hero_repository.dart';
 import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
-
-import 'package:stylish_app/features/onboarding/data/data_sources/onboarding_local_data_source.dart';
-import 'package:stylish_app/features/onboarding/data/repositories/onboarding_repository_impl.dart';
-import 'package:stylish_app/features/onboarding/domain/repositories/onboarding_repository.dart';
-import 'package:stylish_app/features/onboarding/view_model/onboarding_cubit/onboarding_cubit.dart';
-
-import 'package:stylish_app/features/onboarding/view_model/splash_cubit/splash_cubit.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source_impl.dart';
 import 'package:stylish_app/features/product/data/repositories/product_repository_impl.dart';
@@ -44,32 +66,28 @@ import 'package:stylish_app/features/product/domain/use_cases/get_best_sellers_p
 import 'package:stylish_app/features/product/domain/use_cases/get_new_arrivals_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_on_sale_products_use_case.dart';
 import 'package:stylish_app/features/product/domain/use_cases/get_product_by_id.dart';
-import 'package:stylish_app/features/product/presentation/view_model/custom_section/custom_section_cubit.dart';
+import 'package:stylish_app/features/product/domain/use_cases/get_products_by_category_use_case.dart';
+import 'package:stylish_app/features/product/domain/use_cases/get_products_by_ids_use_case.dart';
+import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
+import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source.dart';
+import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source_impl.dart';
+import 'package:stylish_app/features/review/data/repositories/review_repository_impl.dart';
+import 'package:stylish_app/features/review/domain/repositories/review_repository.dart';
+import 'package:stylish_app/features/review/domain/use_cases/get_product_reviews_use_case.dart';
+import 'package:stylish_app/features/review/presentation/view_model/review_cubit/review_cubit.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setupLocators() async {
+  await getIt.reset();
   final prefs = await SharedPreferences.getInstance();
+
   getIt.registerLazySingleton<SharedPreferences>(() => prefs);
-
+  getIt.registerLazySingleton<Box<CartItemModel>>(
+    () => Hive.box<CartItemModel>('cart'),
+  );
   getIt.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
-  // Onboarding
-  getIt.registerLazySingleton<OnboardingLocalDataSource>(
-    () => OnboardingLocalDataSource(prefs: getIt()),
-  );
-  getIt.registerLazySingleton<OnboardingRepository>(
-    () => OnboardingRepositoryImpl(localDataSource: getIt()),
-  );
-  getIt.registerFactory<OnboardingCubit>(
-    () => OnboardingCubit(repository: getIt()),
-  );
-
-  // Splash
-  getIt.registerFactory<SplashCubit>(
-    () => SplashCubit(onboardingRepository: getIt()),
-  );
-
   // Auth
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   if (!getIt.isRegistered<FirebaseFirestore>()) {
@@ -126,6 +144,12 @@ Future<void> setupLocators() async {
       forgotPasswordUseCase: getIt<ForgotPasswordUseCase>(),
     ),
   );
+  getIt.registerFactory<AuthCubit>(
+    () => AuthCubit(
+      auth: getIt<FirebaseAuth>(),
+      authRepository: getIt<AuthRepository>(),
+    ),
+  );
 
   // Home
   getIt.registerLazySingleton<HeroRemoteDataSource>(
@@ -168,6 +192,12 @@ Future<void> setupLocators() async {
     () => GetProductByIdUseCase(productRepository: getIt<ProductRepository>()),
   );
 
+  getIt.registerLazySingleton<GetProductsByCategoryUseCase>(
+    () => GetProductsByCategoryUseCase(
+      productRepository: getIt<ProductRepository>(),
+    ),
+  );
+
   // Category
   getIt.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
@@ -179,6 +209,10 @@ Future<void> setupLocators() async {
   );
   getIt.registerLazySingleton<GetCategoriesUseCase>(
     () => GetCategoriesUseCase(repository: getIt<CategoryRepository>()),
+  );
+  getIt.registerLazySingleton<GetCategoryByIdUseCase>(
+    () =>
+        GetCategoryByIdUseCase(categoryRepository: getIt<CategoryRepository>()),
   );
 
   getIt.registerFactory<CategoryCubit>(
@@ -205,11 +239,132 @@ Future<void> setupLocators() async {
   );
 
   // Custom Section
-  getIt.registerFactory<CustomSectionCubit>(
-    () => CustomSectionCubit(
+  getIt.registerFactory<ProductListingCubit>(
+    () => ProductListingCubit(
       getNewArrivalsProductsUseCase: getIt<GetNewArrivalsProductsUseCase>(),
       getBestSellersProductsUseCase: getIt<GetBestSellersProductsUseCase>(),
       getOnSaleProductsUseCase: getIt<GetOnSaleProductsUseCase>(),
+      getProductsByCategoryUseCase: getIt<GetProductsByCategoryUseCase>(),
+      getCategoryByIdUseCase: getIt<GetCategoryByIdUseCase>(),
+    ),
+  );
+
+  // Favorite
+  getIt.registerLazySingleton<FavoriteRemoteDataSource>(
+    () => FavoriteRemoteDataSourceImpl(
+      firestore: getIt<FirebaseFirestore>(),
+      auth: getIt<FirebaseAuth>(),
+    ),
+  );
+  getIt.registerLazySingleton<FavoriteRepository>(
+    () => FavoriteRepositoryImpl(
+      remoteDataSource: getIt<FavoriteRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<AddToFavoriteUseCase>(
+    () => AddToFavoriteUseCase(favoriteRepository: getIt<FavoriteRepository>()),
+  );
+  getIt.registerLazySingleton<RemoveFavoriteUseCase>(
+    () =>
+        RemoveFavoriteUseCase(favoriteRepository: getIt<FavoriteRepository>()),
+  );
+  getIt.registerLazySingleton<GetUserFavoriteProductIdsUseCase>(
+    () => GetUserFavoriteProductIdsUseCase(
+      repository: getIt<FavoriteRepository>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<FavoriteCubit>(
+    () => FavoriteCubit(
+      addToFavoriteUseCase: getIt<AddToFavoriteUseCase>(),
+      removeFavoriteUseCase: getIt<RemoveFavoriteUseCase>(),
+      getUserFavoriteProductIdsUseCase:
+          getIt<GetUserFavoriteProductIdsUseCase>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<GetProductsByIdsUseCase>(
+    () => GetProductsByIdsUseCase(repository: getIt<ProductRepository>()),
+  );
+
+  getIt.registerFactory<FavoritesCubit>(
+    () => FavoritesCubit(
+      getProductsByIdsUseCase: getIt<GetProductsByIdsUseCase>(),
+      favoriteCubit: getIt<FavoriteCubit>(),
+    ),
+  );
+
+  // Review
+
+  getIt.registerLazySingleton<ReviewRemoteDataSource>(
+    () => ReviewRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<ReviewRepository>(
+    () =>
+        ReviewRepositoryImpl(remoteDataSource: getIt<ReviewRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<GetProductReviewsUseCase>(
+    () => GetProductReviewsUseCase(repository: getIt<ReviewRepository>()),
+  );
+
+  getIt.registerFactory<ReviewCubit>(
+    () => ReviewCubit(
+      getProductReviewsUseCase: getIt<GetProductReviewsUseCase>(),
+    ),
+  );
+
+  // Cart
+  getIt.registerLazySingleton<CartLocalDataSource>(
+    () => CartLocalDataSourceImpl(cartBox: getIt<Box<CartItemModel>>()),
+  );
+  getIt.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(
+      productDataSource: getIt<ProductRemoteDataSource>(),
+      localDataSource: getIt<CartLocalDataSource>(),
+      remoteDataSource: getIt<CartRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<GetCartItemsUseCase>(
+    () => GetCartItemsUseCase(repo: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToCartUseCase>(
+    () => AddToCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToLocalCartUseCase>(
+    () => AddToLocalCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToRemoteCartUseCase>(
+    () => AddToRemoteCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<CalculateSubtotalUseCase>(
+    () => CalculateSubtotalUseCase(),
+  );
+  getIt.registerLazySingleton<IncrementCartItemUseCase>(
+    () => IncrementCartItemUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<DecrementCartItemUseCase>(
+    () => DecrementCartItemUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<RemoveFromCartUseCase>(
+    () => RemoveFromCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<ClearLocalCartUseCase>(
+    () => ClearLocalCartUseCase(repo: getIt<CartRepository>()),
+  );
+
+  getIt.registerLazySingleton<CartCubit>(
+    () => CartCubit(
+      auth: getIt<FirebaseAuth>(),
+      getCartItemsUseCase: getIt<GetCartItemsUseCase>(),
+      addToCartUseCase: getIt<AddToCartUseCase>(),
+      calculateSubtotalUseCase: getIt<CalculateSubtotalUseCase>(),
+      incrementCartItemUseCase: getIt<IncrementCartItemUseCase>(),
+      decrementCartItemUseCase: getIt<DecrementCartItemUseCase>(),
+      removeFromCartUseCase: getIt<RemoveFromCartUseCase>(),
+      clearLocalCartUseCase: getIt<ClearLocalCartUseCase>(),
     ),
   );
 }

@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stylish_app/core/app/app.dart';
 import 'package:stylish_app/core/app/app_initializer.dart';
 import 'package:stylish_app/core/di/service_locator.dart';
+import 'package:stylish_app/features/product/dummy_products_seeding.dart';
 
 void main() async {
   await AppInitializer().initApp();

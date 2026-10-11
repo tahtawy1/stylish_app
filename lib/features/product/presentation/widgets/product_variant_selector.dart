@@ -13,6 +13,10 @@ class ProductVariantSelector extends StatelessWidget {
     this.selectedSizeVariant,
     this.onColorVariantSelected,
     this.onSizeVariantSelected,
+    required this.requireSize,
+    required this.quantity,
+    this.onQuantityIncrement,
+    this.onQuantityDecrement,
   });
 
   final List<ColorVariantEntity> colorVariants;
@@ -21,7 +25,10 @@ class ProductVariantSelector extends StatelessWidget {
   final SizeVariantEntity? selectedSizeVariant;
   final ValueChanged<ColorVariantEntity>? onColorVariantSelected;
   final ValueChanged<SizeVariantEntity>? onSizeVariantSelected;
-
+  final bool requireSize;
+  final int quantity;
+  final VoidCallback? onQuantityIncrement;
+  final VoidCallback? onQuantityDecrement;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -33,33 +40,57 @@ class ProductVariantSelector extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                context.l10n.chooseSize,
-                style: context.textStyle.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.l10n.chooseSize,
+                    style: context.textStyle.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                  if (requireSize) ...[
+                    Text(
+                      context.l10n.required,
+                      style: context.textStyle.bodySmall?.copyWith(
+                        color: context.colors.error,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
               ),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: sizes.map((sizeVariant) {
-                  final isSelected =
-                      selectedSizeVariant?.id == sizeVariant.id;
+                  final isSelected = selectedSizeVariant?.id == sizeVariant.id;
+                  final isAvailable =
+                      sizeVariant.isAvailable && sizeVariant.quantity > 0;
+
                   return GestureDetector(
-                    onTap: () => onSizeVariantSelected?.call(sizeVariant),
+                    onTap: isAvailable
+                        ? () => onSizeVariantSelected?.call(sizeVariant)
+                        : null,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isSelected
+                        color: !isAvailable
+                            ? (context.isDarkMode
+                                ? AppColors.grey3
+                                : AppColors.grey9)
+                            : isSelected
                             ? context.colors.primary
                             : context.colors.surface,
                         border: Border.all(
-                          color: isSelected
+                          color: !isAvailable
+                              ? Colors.transparent
+                              : isSelected
                               ? context.colors.primary
                               : context.colors.outline.withValues(alpha: 0.5),
                         ),
@@ -69,7 +100,14 @@ class ProductVariantSelector extends StatelessWidget {
                         sizeVariant.size,
                         style: context.textStyle.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isSelected
+                          decoration: !isAvailable
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: !isAvailable
+                              ? (context.isDarkMode
+                                  ? AppColors.grey5
+                                  : AppColors.grey7)
+                              : isSelected
                               ? context.colors.onPrimary
                               : context.colors.onSurface,
                         ),
@@ -137,6 +175,22 @@ class ProductVariantSelector extends StatelessWidget {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 20),
+
+              // Quantity Section
+              Text(
+                context.l10n.quantity,
+                style: context.textStyle.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+              const SizedBox(height: 12),
+              QuantitySelector(
+                onQuantityDecrement: onQuantityDecrement,
+                quantity: quantity,
+                onQuantityIncrement: onQuantityIncrement,
+              ),
             ],
           ),
         ),
@@ -197,5 +251,73 @@ class ProductVariantSelector extends StatelessWidget {
       default:
         return AppColors.grey5;
     }
+  }
+}
+
+class QuantitySelector extends StatelessWidget {
+  const QuantitySelector({
+    super.key,
+    required this.onQuantityDecrement,
+    required this.quantity,
+    required this.onQuantityIncrement,
+    this.smallWidget = false,
+  });
+
+  final VoidCallback? onQuantityDecrement;
+  final int quantity;
+  final VoidCallback? onQuantityIncrement;
+  final bool smallWidget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: onQuantityDecrement,
+          child: Container(
+            width: smallWidget ? 24 : 36,
+            height: smallWidget ? 24 : 36,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: context.colors.surface,
+              border: Border.all(
+                color: context.colors.outline.withValues(alpha: 0.5),
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.remove,
+              size: 18,
+              color: context.colors.onSurface,
+            ),
+          ),
+        ),
+        SizedBox(width: smallWidget ? 8 : 16),
+        Text(
+          '$quantity',
+          style: context.textStyle.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
+        ),
+        SizedBox(width: smallWidget ? 8 : 16),
+        GestureDetector(
+          onTap: onQuantityIncrement,
+          child: Container(
+            width: smallWidget ? 24 : 36,
+            height: smallWidget ? 24 : 36,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: context.colors.surface,
+              border: Border.all(
+                color: context.colors.outline.withValues(alpha: 0.5),
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.add, size: 18, color: context.colors.onSurface),
+          ),
+        ),
+      ],
+    );
   }
 }
