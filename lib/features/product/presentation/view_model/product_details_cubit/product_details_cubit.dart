@@ -56,6 +56,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
             colorVariants: colorVariants,
             selectedColorVariant: selectedColorVariant,
             images: images,
+            quantity: 1,
           ),
         );
       },
@@ -74,12 +75,39 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
         selectedColorVariant: colorVariant,
         selectedSizeVariant: null,
         images: images,
+        quantity: 1,
       ),
     );
   }
 
   void selectSizeVariant(SizeVariantEntity sizeVariant) {
     if (isClosed) return;
-    emit(state.copyWith(selectedSizeVariant: sizeVariant));
+    if (sizeVariant.quantity <= 0 || !sizeVariant.isAvailable) return;
+    int currentQuantity = state.quantity;
+    if (currentQuantity > sizeVariant.quantity) {
+      currentQuantity = sizeVariant.quantity;
+    }
+    emit(
+      state.copyWith(
+        selectedSizeVariant: sizeVariant,
+        quantity: currentQuantity,
+      ),
+    );
+  }
+
+  void incrementQuantity() {
+    if (isClosed) return;
+    final selectedSize = state.selectedSizeVariant;
+    if (selectedSize == null) return;
+    if (state.quantity < selectedSize.quantity) {
+      emit(state.copyWith(quantity: state.quantity + 1));
+    }
+  }
+
+  void decrementQuantity() {
+    if (isClosed) return;
+    if (state.quantity > 1) {
+      emit(state.copyWith(quantity: state.quantity - 1));
+    }
   }
 }

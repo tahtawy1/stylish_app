@@ -12,6 +12,7 @@ class ProductDetailsState {
   final List<String>? images;
   final bool isFavorite;
   final String? errorMessage;
+  final int quantity;
 
   const ProductDetailsState({
     this.status = ProductDetailsStatus.initial,
@@ -22,6 +23,7 @@ class ProductDetailsState {
     this.images,
     this.isFavorite = false,
     this.errorMessage,
+    this.quantity = 1,
   });
 
   List<SizeVariantEntity> get availableSizes =>
@@ -38,6 +40,7 @@ class ProductDetailsState {
     List<String>? images,
     bool? isFavorite,
     String? errorMessage,
+    int? quantity,
   }) {
     return ProductDetailsState(
       status: status ?? this.status,
@@ -50,6 +53,7 @@ class ProductDetailsState {
       images: images ?? this.images,
       isFavorite: isFavorite ?? this.isFavorite,
       errorMessage: errorMessage ?? this.errorMessage,
+      quantity: quantity ?? this.quantity,
     );
   }
 }

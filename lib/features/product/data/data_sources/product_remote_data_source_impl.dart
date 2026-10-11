@@ -214,7 +214,6 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }) async {
     if (ids.isEmpty) return [];
     try {
-      // Firestore whereIn supports max 30 items — split into chunks
       const chunkSize = 30;
       final chunks = <List<String>>[];
       for (var i = 0; i < ids.length; i += chunkSize) {

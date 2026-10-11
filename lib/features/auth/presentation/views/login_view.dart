@@ -11,6 +11,7 @@ import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_botto
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_header.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/auth_or_divider.dart';
 import 'package:stylish_app/features/auth/presentation/widgets/shared/social_auth_button.dart';
+import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -47,6 +48,9 @@ class _LoginViewState extends State<LoginView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(l10n.verifyEmailMessage)));
         } else if (state is LoginSuccess) {
+          // Sync guest cart to remote, then navigate away.
+          // syncLocalCart is safe — it guards against null userId and empty cart internally.
+          context.read<CartCubit>().syncLocalCart().catchError((_) {});
           context.pop();
         }
       },

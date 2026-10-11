@@ -264,4 +264,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defaultUserName => 'User';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get quantity => 'Quantity';
 }

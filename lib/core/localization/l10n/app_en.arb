@@ -101,5 +101,7 @@
             }
         }
     },
-    "defaultUserName": "User"
+    "defaultUserName": "User",
+    "required": "Required",
+    "quantity": "Quantity"
 }

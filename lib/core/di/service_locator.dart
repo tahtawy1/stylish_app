@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:stylish_app/features/auth/data/data_sources/auth_data_source_impl.dart';
@@ -18,6 +19,23 @@ import 'package:stylish_app/features/auth/presentation/view_model/auth_cubit/aut
 import 'package:stylish_app/features/auth/presentation/view_model/forgot_password_cubit/forgot_password_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/login_cubit/login_cubit.dart';
 import 'package:stylish_app/features/auth/presentation/view_model/register_cubit/register_cubit.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_local_data_source.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_local_data_source_impl.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_remote_data_source.dart';
+import 'package:stylish_app/features/cart/data/data_sources/cart_remote_data_source_impl.dart';
+import 'package:stylish_app/features/cart/data/models/cart_item_model.dart';
+import 'package:stylish_app/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:stylish_app/features/cart/domain/repositories/cart_repository.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_local_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/add_to_remote_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/calculate_subtotal_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/clear_local_cart_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/decrement_cart_item_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/get_cart_items_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/increment_cart_item_use_case.dart';
+import 'package:stylish_app/features/cart/domain/use_cases/remove_from_cart_use_case.dart';
+import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
 import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source.dart';
 import 'package:stylish_app/features/category/data/data_sources/category_remote_data_source_impl.dart';
 import 'package:stylish_app/features/category/data/repositories/category_repository_impl.dart';
@@ -33,6 +51,7 @@ import 'package:stylish_app/features/favorite/domain/use_cases/add_to_favorite_u
 import 'package:stylish_app/features/favorite/domain/use_cases/get_user_favorite_products_ids_use_case.dart';
 import 'package:stylish_app/features/favorite/domain/use_cases/remove_favorite_use_case.dart';
 import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
+import 'package:stylish_app/features/favorite/presentation/view_model/favorites_cubit/favorites_cubit.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source.dart';
 import 'package:stylish_app/features/hero/data/data_sources/hero_remote_data_source_impl.dart';
 import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl.dart';
@@ -51,7 +70,6 @@ import 'package:stylish_app/features/product/domain/use_cases/get_products_by_ca
 import 'package:stylish_app/features/product/domain/use_cases/get_products_by_ids_use_case.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
-import 'package:stylish_app/features/favorite/presentation/view_model/favorites_cubit/favorites_cubit.dart';
 import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source.dart';
 import 'package:stylish_app/features/review/data/data_sources/review_remote_data_source_impl.dart';
 import 'package:stylish_app/features/review/data/repositories/review_repository_impl.dart';
@@ -64,8 +82,11 @@ final getIt = GetIt.instance;
 Future<void> setupLocators() async {
   await getIt.reset();
   final prefs = await SharedPreferences.getInstance();
-  getIt.registerLazySingleton<SharedPreferences>(() => prefs);
 
+  getIt.registerLazySingleton<SharedPreferences>(() => prefs);
+  getIt.registerLazySingleton<Box<CartItemModel>>(
+    () => Hive.box<CartItemModel>('cart'),
+  );
   getIt.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   // Auth
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
@@ -289,6 +310,61 @@ Future<void> setupLocators() async {
   getIt.registerFactory<ReviewCubit>(
     () => ReviewCubit(
       getProductReviewsUseCase: getIt<GetProductReviewsUseCase>(),
+    ),
+  );
+
+  // Cart
+  getIt.registerLazySingleton<CartLocalDataSource>(
+    () => CartLocalDataSourceImpl(cartBox: getIt<Box<CartItemModel>>()),
+  );
+  getIt.registerLazySingleton<CartRemoteDataSource>(
+    () => CartRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(
+      productDataSource: getIt<ProductRemoteDataSource>(),
+      localDataSource: getIt<CartLocalDataSource>(),
+      remoteDataSource: getIt<CartRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<GetCartItemsUseCase>(
+    () => GetCartItemsUseCase(repo: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToCartUseCase>(
+    () => AddToCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToLocalCartUseCase>(
+    () => AddToLocalCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<AddToRemoteCartUseCase>(
+    () => AddToRemoteCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<CalculateSubtotalUseCase>(
+    () => CalculateSubtotalUseCase(),
+  );
+  getIt.registerLazySingleton<IncrementCartItemUseCase>(
+    () => IncrementCartItemUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<DecrementCartItemUseCase>(
+    () => DecrementCartItemUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<RemoveFromCartUseCase>(
+    () => RemoveFromCartUseCase(cartRepository: getIt<CartRepository>()),
+  );
+  getIt.registerLazySingleton<ClearLocalCartUseCase>(
+    () => ClearLocalCartUseCase(repo: getIt<CartRepository>()),
+  );
+
+  getIt.registerLazySingleton<CartCubit>(
+    () => CartCubit(
+      auth: getIt<FirebaseAuth>(),
+      getCartItemsUseCase: getIt<GetCartItemsUseCase>(),
+      addToCartUseCase: getIt<AddToCartUseCase>(),
+      calculateSubtotalUseCase: getIt<CalculateSubtotalUseCase>(),
+      incrementCartItemUseCase: getIt<IncrementCartItemUseCase>(),
+      decrementCartItemUseCase: getIt<DecrementCartItemUseCase>(),
+      removeFromCartUseCase: getIt<RemoveFromCartUseCase>(),
+      clearLocalCartUseCase: getIt<ClearLocalCartUseCase>(),
     ),
   );
 }

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:stylish_app/core/extensions/build_context.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
+import 'package:stylish_app/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
 import 'package:stylish_app/features/favorite/presentation/view_model/favorite_cubit/favorite_cubit.dart';
 import 'package:stylish_app/features/product/domain/entities/product_entity.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
@@ -33,9 +35,20 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     context.read<ProductDetailsCubit>().load(id: widget.productId);
   }
 
+  bool requireSize = false;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+    return BlocListener<CartCubit, CartState>(
+      listenWhen: (prev, curr) => curr.userMessage != null && curr.userMessage != prev.userMessage,
+      listener: (context, cartState) {
+        if (cartState.userMessage != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(cartState.userMessage!)));
+          context.read<CartCubit>().clearUserMessage();
+        }
+      },
+      child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
       builder: (context, state) {
         final isLoading = state.status == ProductDetailsStatus.loading;
         final product = state.product;
@@ -126,6 +139,18 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             sizeVariant,
                           );
                         },
+                        requireSize: requireSize,
+                        quantity: state.quantity,
+                        onQuantityIncrement: () {
+                          context
+                              .read<ProductDetailsCubit>()
+                              .incrementQuantity();
+                        },
+                        onQuantityDecrement: () {
+                          context
+                              .read<ProductDetailsCubit>()
+                              .decrementQuantity();
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -138,10 +163,32 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
           bottomNavigationBar: ProductBottomBar(
             isLoading: isLoading,
             product: isLoading ? productBone : product ?? productBone,
-            onAddToCart: () {},
+            onAddToCart: () {
+              final selectedSize =
+                  context.read<ProductDetailsCubit>().state.selectedSizeVariant;
+              if (selectedSize == null) {
+                requireSize = true;
+                setState(() {});
+                return;
+              }
+              requireSize = false;
+              setState(() {});
+
+              context.read<CartCubit>().addToCart(
+                product: state.product!,
+                cartItem: CartItemEntity(
+                  productId: widget.productId,
+                  variantId: state.selectedColorVariant?.id ?? '',
+                  size: selectedSize.size,
+                  quantity: state.quantity,
+                ),
+                stock: selectedSize.quantity,
+              );
+            },
           ),
         );
       },
+    ),
     );
   }
 }
