@@ -270,4 +270,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quantity => 'Quantity';
+
+  @override
+  String insufficientStock(String productName) {
+    return 'Item \"$productName\" is unavailable or requested quantity exceeds available stock.';
+  }
+
+  @override
+  String get orderSuccess => 'Order placed successfully!';
+
+  @override
+  String get emptyCartError => 'Your cart is empty.';
+
+  @override
+  String get myOrders => 'My Orders';
+
+  @override
+  String get noOrders => 'You haven\'t placed any orders yet.';
+
+  @override
+  String orderIdLabel(String id) {
+    return 'Order #$id';
+  }
+
+  @override
+  String get orderDate => 'Date';
+
+  @override
+  String get orderStatus => 'Status';
+
+  @override
+  String get orderTotal => 'Total';
+
+  @override
+  String itemsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get orderPending => 'Pending';
+
+  @override
+  String get orderProcessing => 'Processing';
+
+  @override
+  String get orderShipped => 'Shipped';
+
+  @override
+  String get orderDelivered => 'Delivered';
+
+  @override
+  String get orderCancelled => 'Cancelled';
 }

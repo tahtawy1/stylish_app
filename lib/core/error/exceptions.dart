@@ -19,3 +19,11 @@ class AuthException extends AppException {
   final String code;
   const AuthException({required this.code, required super.message});
 }
+
+class InsufficientStockException extends AppException {
+  final String productTitle;
+  const InsufficientStockException({
+    required this.productTitle,
+    required super.message,
+  });
+}

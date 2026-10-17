@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stylish_app/core/extensions/build_context.dart';
+import 'package:stylish_app/core/extensions/failure_extension.dart';
 import 'package:stylish_app/core/utils/auth_guard.dart';
 import 'package:stylish_app/core/widgets/app_button.dart';
 import 'package:stylish_app/features/auth/checkout/presentation/view/widgets/checkout_app_bar.dart';
@@ -8,6 +10,7 @@ import 'package:stylish_app/features/auth/checkout/presentation/view/widgets/che
 import 'package:stylish_app/features/auth/checkout/presentation/view/widgets/checkout_items_section.dart';
 import 'package:stylish_app/features/auth/checkout/presentation/view/widgets/checkout_order_summary_section.dart';
 import 'package:stylish_app/features/cart/presentation/view_model/cubit/cart_cubit.dart';
+import 'package:stylish_app/features/order/presentation/view_model/order_cubit/order_cubit.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
@@ -75,7 +78,71 @@ class _CheckoutViewState extends State<CheckoutView> {
                 minimum: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                 child: SizedBox(
                   height: 48,
-                  child: AppButton(title: 'Place Order', onPressed: () {}),
+                  child: BlocConsumer<OrderCubit, OrderState>(
+                    listener: (context, orderState) {
+                      if (orderState is OrderError) {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                orderState.failure.toMessage(context),
+                              ),
+                              backgroundColor: context.colors.error,
+                            ),
+                          );
+                      } else if (orderState is OrderSuccess) {
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(context.l10n.orderSuccess),
+                              backgroundColor: const Color(0xFF15803D),
+                            ),
+                          );
+                        // Refresh cart so the UI updates
+                        context.read<CartCubit>().fetchCartData();
+                        // Navigate to My Orders screen
+                        context.pushReplacement('/my_orders');
+                      }
+                    },
+                    builder: (context, orderState) {
+                      final isSubmitting = orderState is OrderLoading;
+                      return AppButton(
+                        title: 'Place Order',
+                        loading: isSubmitting,
+                        onPressed: isSubmitting
+                            ? null
+                            : () {
+                                final allowed = AuthGuard.requireAuth(
+                                  context,
+                                  action: LoginRequiredAction.checkout,
+                                );
+                                if (!allowed) return;
+
+                                if (cartState.cartItemsWithProducts.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          context.l10n.emptyCartError,
+                                        ),
+                                        backgroundColor: context.colors.error,
+                                      ),
+                                    );
+                                  return;
+                                }
+
+                                context.read<OrderCubit>().placeOrder(
+                                      cartItems:
+                                          cartState.cartItemsWithProducts,
+                                      shippingFee: shippingFee,
+                                    );
+                              },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

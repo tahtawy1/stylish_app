@@ -103,5 +103,41 @@
     },
     "defaultUserName": "User",
     "required": "Required",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "insufficientStock": "Item \"{productName}\" is unavailable or requested quantity exceeds available stock.",
+    "@insufficientStock": {
+        "placeholders": {
+            "productName": {
+                "type": "String"
+            }
+        }
+    },
+    "orderSuccess": "Order placed successfully!",
+    "emptyCartError": "Your cart is empty.",
+    "myOrders": "My Orders",
+    "noOrders": "You haven't placed any orders yet.",
+    "orderIdLabel": "Order #{id}",
+    "@orderIdLabel": {
+        "placeholders": {
+            "id": {
+                "type": "String"
+            }
+        }
+    },
+    "orderDate": "Date",
+    "orderStatus": "Status",
+    "orderTotal": "Total",
+    "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
+    "@itemsCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "orderPending": "Pending",
+    "orderProcessing": "Processing",
+    "orderShipped": "Shipped",
+    "orderDelivered": "Delivered",
+    "orderCancelled": "Cancelled"
 }

@@ -597,6 +597,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quantity'**
   String get quantity;
+
+  /// No description provided for @insufficientStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Item \"{productName}\" is unavailable or requested quantity exceeds available stock.'**
+  String insufficientStock(String productName);
+
+  /// No description provided for @orderSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Order placed successfully!'**
+  String get orderSuccess;
+
+  /// No description provided for @emptyCartError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty.'**
+  String get emptyCartError;
+
+  /// No description provided for @myOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'My Orders'**
+  String get myOrders;
+
+  /// No description provided for @noOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t placed any orders yet.'**
+  String get noOrders;
+
+  /// No description provided for @orderIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id}'**
+  String orderIdLabel(String id);
+
+  /// No description provided for @orderDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get orderDate;
+
+  /// No description provided for @orderStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get orderStatus;
+
+  /// No description provided for @orderTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get orderTotal;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String itemsCount(int count);
+
+  /// No description provided for @orderPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get orderPending;
+
+  /// No description provided for @orderProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get orderProcessing;
+
+  /// No description provided for @orderShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get orderShipped;
+
+  /// No description provided for @orderDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get orderDelivered;
+
+  /// No description provided for @orderCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get orderCancelled;
 }
 
 class _AppLocalizationsDelegate
