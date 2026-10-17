@@ -58,6 +58,14 @@ import 'package:stylish_app/features/hero/data/repositories/hero_repository_impl
 import 'package:stylish_app/features/hero/domain/repositories/hero_repository.dart';
 import 'package:stylish_app/features/hero/domain/use_cases/get_hero_sections_use_case.dart';
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
+import 'package:stylish_app/features/order/data/data_sources/order_remote_data_source.dart';
+import 'package:stylish_app/features/order/data/data_sources/order_remote_data_source_impl.dart';
+import 'package:stylish_app/features/order/data/repositories/order_repository_impl.dart';
+import 'package:stylish_app/features/order/domain/repositories/order_repository.dart';
+import 'package:stylish_app/features/order/domain/use_cases/create_order_use_case.dart';
+import 'package:stylish_app/features/order/domain/use_cases/get_my_orders_use_case.dart';
+import 'package:stylish_app/features/order/presentation/view_model/my_orders_cubit/my_orders_cubit.dart';
+import 'package:stylish_app/features/order/presentation/view_model/order_cubit/order_cubit.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source.dart';
 import 'package:stylish_app/features/product/data/data_sources/product_remote_data_source_impl.dart';
 import 'package:stylish_app/features/product/data/repositories/product_repository_impl.dart';
@@ -365,6 +373,35 @@ Future<void> setupLocators() async {
       decrementCartItemUseCase: getIt<DecrementCartItemUseCase>(),
       removeFromCartUseCase: getIt<RemoveFromCartUseCase>(),
       clearLocalCartUseCase: getIt<ClearLocalCartUseCase>(),
+    ),
+  );
+
+  // Order
+  getIt.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSourceImpl(firestore: getIt<FirebaseFirestore>()),
+  );
+  getIt.registerLazySingleton<OrderRepository>(
+    () => OrderRepositoryImpl(
+      remoteDataSource: getIt<OrderRemoteDataSource>(),
+      cartLocalDataSource: getIt<CartLocalDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<CreateOrderUseCase>(
+    () => CreateOrderUseCase(repo: getIt<OrderRepository>()),
+  );
+  getIt.registerLazySingleton<GetMyOrdersUseCase>(
+    () => GetMyOrdersUseCase(repo: getIt<OrderRepository>()),
+  );
+  getIt.registerFactory<OrderCubit>(
+    () => OrderCubit(
+      createOrderUseCase: getIt<CreateOrderUseCase>(),
+      auth: getIt<FirebaseAuth>(),
+    ),
+  );
+  getIt.registerFactory<MyOrdersCubit>(
+    () => MyOrdersCubit(
+      getMyOrdersUseCase: getIt<GetMyOrdersUseCase>(),
+      auth: getIt<FirebaseAuth>(),
     ),
   );
 }

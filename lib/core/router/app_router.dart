@@ -14,6 +14,8 @@ import 'package:stylish_app/features/category/presentation/view_model/category_c
 import 'package:stylish_app/features/home/presentation/view_model/home_cubit/home_cubit.dart';
 import 'package:stylish_app/features/home/presentation/views/home_view.dart';
 import 'package:stylish_app/features/home/presentation/views/layout.dart';
+import 'package:stylish_app/features/order/presentation/view_model/order_cubit/order_cubit.dart';
+import 'package:stylish_app/features/order/presentation/views/my_orders_view.dart';
 import 'package:stylish_app/features/product/presentation/view_model/custom_section/product_listing_cubit.dart';
 import 'package:stylish_app/features/product/presentation/view_model/product_details_cubit/product_details_cubit.dart';
 import 'package:stylish_app/features/product/presentation/views/product_details_view.dart';
@@ -124,10 +126,21 @@ class AppRouter {
       ),
       GoRoute(
         path: '/checkout',
-        builder: (context, state) => BlocProvider<CartCubit>.value(
-          value: getIt<CartCubit>()..fetchCartData(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider<CartCubit>.value(
+              value: getIt<CartCubit>()..fetchCartData(),
+            ),
+            BlocProvider<OrderCubit>(
+              create: (context) => getIt<OrderCubit>(),
+            ),
+          ],
           child: const CheckoutView(),
         ),
+      ),
+      GoRoute(
+        path: '/my_orders',
+        builder: (context, state) => const MyOrdersView(),
       ),
     ],
   );

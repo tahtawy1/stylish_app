@@ -20,3 +20,11 @@ class AuthFailure extends Failure {
   final String code;
   const AuthFailure({required this.code, required super.message});
 }
+
+class InsufficientStockFailure extends Failure {
+  final String productTitle;
+  const InsufficientStockFailure({
+    required this.productTitle,
+    required super.message,
+  });
+}

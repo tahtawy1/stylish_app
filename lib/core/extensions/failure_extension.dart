@@ -9,7 +9,10 @@ extension FailureExtension on Failure {
       CacheFailure() => context.l10n.cacheError,
       NetworkFailure() => context.l10n.networkError,
       AuthFailure(code: final code) => _getAuthMessage(context, code),
-      ServerFailure() => context.l10n.serverError,
+      InsufficientStockFailure(productTitle: final title) =>
+        context.l10n.insufficientStock(title),
+      ServerFailure(message: final msg) =>
+        msg.isNotEmpty ? msg : context.l10n.serverError,
       _ => context.l10n.unexpectedError,
     };
   }
